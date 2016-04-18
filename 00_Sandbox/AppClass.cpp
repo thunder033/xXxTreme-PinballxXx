@@ -1,4 +1,5 @@
 #include "AppClass.h"
+#include "GameObject.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
 	super::InitWindow("Sandbox"); // Window Name
@@ -39,6 +40,8 @@ void AppClass::Update(void)
 	
 	//Set the model matrix for the first model to be the arcball
 	m_pMeshMngr->SetModelMatrix(ToMatrix4(m_qArcBall), 0);
+
+	GameObject::updateAll(m_pSystem->LapClock());
 	
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
@@ -78,6 +81,8 @@ void AppClass::Display(void)
 		m_pMeshMngr->AddGridToQueue(1.0f, REAXIS::XY, REBLUE * 0.75f); //renders the XY grid with a 100% scale
 		break;
 	}
+
+	GameObject::renderAll();
 	
 	m_pMeshMngr->Render(); //renders the render list
 
