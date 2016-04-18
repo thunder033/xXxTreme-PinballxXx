@@ -6,12 +6,16 @@ Date: 2015/09 (Last Modified on: 15/11)
 #define __APPLICATION_H_
 
 #include "RE\ReEngAppClass.h"
+#include "PinballTable.h"
 #include <SFML\Graphics.hpp>
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
 class AppClass : public ReEngAppClass
 {
+private:
+	PinballTable* Table;
+
 public:
 	typedef ReEngAppClass super;
 
