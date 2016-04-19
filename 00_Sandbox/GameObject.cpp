@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-
+std::vector<GameObject*> GameObject::instances;
 
 GameObject::GameObject()
 {
@@ -19,7 +19,7 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	GameObject::instances.erase(std::remove(instances.begin(), instances.end(), this), instances.end);
+	GameObject::instances.erase(std::remove(instances.begin(), instances.end(), this), instances.end());
 
 	if (mesh != nullptr) 
 	{

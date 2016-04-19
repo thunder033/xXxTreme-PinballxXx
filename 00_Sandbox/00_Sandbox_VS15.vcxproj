@@ -158,11 +158,17 @@ xcopy "$(SolutionDir)include\RE\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
   <ItemGroup>
     <ClCompile Include="AppClass.cpp" />
     <ClCompile Include="AppClassControls.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PinballTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\res\Resource.h" />
     <ClInclude Include="AppClass.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="PinballTable.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\BTO.rc" />

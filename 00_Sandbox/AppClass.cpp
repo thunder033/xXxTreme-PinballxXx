@@ -16,11 +16,11 @@ void AppClass::InitVariables(void)
 	m_selection = std::pair<int, int>(-1, -1);
 	//Set the camera position
 	m_pCameraMngr->SetPositionTargetAndView(
-		vector3(0.0f, 2.5f, 15.0f),//Camera position
-		vector3(0.0f, 2.5f, 0.0f),//What Im looking at
+		vector3(0.0f, -7.f, 13.0f),//Camera position
+		vector3(0.0f, -0.75f, 0.0f),//What Im looking at
 		REAXISY);//What is up
-	//Load a model onto the Mesh manager
-	m_pMeshMngr->LoadModel("Lego\\Unikitty.bto", "Unikitty");
+
+	Table = new PinballTable();
 }
 
 void AppClass::Update(void)
@@ -82,7 +82,8 @@ void AppClass::Display(void)
 		break;
 	}
 
-	GameObject::renderAll();
+	//GameObject::renderAll();
+	Table->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix());
 	
 	m_pMeshMngr->Render(); //renders the render list
 
@@ -92,4 +93,6 @@ void AppClass::Display(void)
 void AppClass::Release(void)
 {
 	super::Release(); //release the memory of the inherited fields
+
+	delete Table;
 }

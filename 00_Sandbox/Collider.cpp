@@ -6,7 +6,6 @@ Collider::Collider()
 {
 }
 
-
 Collider::~Collider()
 {
 }

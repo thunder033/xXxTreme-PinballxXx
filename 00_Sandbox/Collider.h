@@ -3,8 +3,8 @@ class Collider
 {
 public:
 	Collider();
-	~Collider();
+	virtual ~Collider();
 
-	bool isColliding(Collider*);
+	virtual bool isColliding(Collider* Other) = 0;
 };
 
