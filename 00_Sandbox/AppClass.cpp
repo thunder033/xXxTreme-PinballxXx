@@ -1,6 +1,6 @@
 #include "AppClass.h"
 #include "GameObject.h"
-void AppClass::InitWindow(String a_sWindowName)
+void App::InitWindow(String a_sWindowName)
 {
 	super::InitWindow("Sandbox"); // Window Name
 
@@ -10,8 +10,10 @@ void AppClass::InitWindow(String a_sWindowName)
 	m_v4ClearColor = vector4(0.4f, 0.6f, 0.9f, 0.0f);
 }
 
-void AppClass::InitVariables(void)
+void App::InitVariables(void)
 {
+	GameObject::init();
+
 	//Reset the selection to -1, -1
 	m_selection = std::pair<int, int>(-1, -1);
 	//Set the camera position
@@ -21,9 +23,12 @@ void AppClass::InitVariables(void)
 		REAXISY);//What is up
 
 	Table = new PinballTable();
+
+	new GameObject();
+	GameObject::setDebugMode(true);
 }
 
-void AppClass::Update(void)
+void App::Update(void)
 {
 	//Update the system's time
 	m_pSystem->UpdateTime();
@@ -60,7 +65,7 @@ void AppClass::Update(void)
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
 }
 
-void AppClass::Display(void)
+void App::Display(void)
 {
 	//clear the screen
 	ClearScreen();
@@ -82,15 +87,19 @@ void AppClass::Display(void)
 		break;
 	}
 
-	//GameObject::renderAll();
 	Table->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix());
+	matrix4 projection = m_pCameraMngr->GetProjectionMatrix();
+	matrix4 view = m_pCameraMngr->GetViewMatrix();
+
+	GameObject::renderAll(projection, view);
+	//Table->Render(projection, view);
 	
 	m_pMeshMngr->Render(); //renders the render list
 
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
-void AppClass::Release(void)
+void App::Release(void)
 {
 	super::Release(); //release the memory of the inherited fields
 

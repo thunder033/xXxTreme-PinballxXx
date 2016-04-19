@@ -12,7 +12,7 @@ Date: 2015/09 (Last Modified on: 15/11)
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
-class AppClass : public ReEngAppClass
+class App : public ReEngAppClass
 {
 private:
 	PinballTable* Table;
@@ -29,13 +29,13 @@ public:
 	- bool a_bConsole = false -> create command window flag
 	OUTPUT: ---
 	*/
-	AppClass(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow, bool a_bUsingConsole = false) : super(hInstance, lpCmdLine, nCmdShow, a_bUsingConsole) {}
+	App(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow, bool a_bUsingConsole = false) : super(hInstance, lpCmdLine, nCmdShow, a_bUsingConsole) {}
 	/*
 	USAGE: Destructor
 	ARGUMENTS: ---
 	OUTPUT: ---
 	*/
-	~AppClass(void) { Release(); }
+	~App(void) { Release(); }
 	/*
 	USAGE: Reads the configuration of the application to a file
 	ARGUMENTS: ---

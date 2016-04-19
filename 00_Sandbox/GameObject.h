@@ -18,9 +18,15 @@ class GameObject
 	Collider* collider;
 	MeshClass* mesh;
 
+	bool hasFrameCollisions;
+	vector3 debugColor;
+
 	static std::vector<GameObject*> instances;
+	static bool debugMode;
+	static MeshManagerSingleton* renderer;
 public:
 	GameObject();
+	GameObject(MeshClass*);
 	~GameObject();
 
 	vector3 getOrigin();
@@ -33,10 +39,15 @@ public:
 
 	void render(matrix4, matrix4);
 
-	void RenderDebugHelpers();
+	void renderDebugHelpers();
 
+	//Static GameObject Methods
+	//a.k.a BoundingObjectManager
+	static void init();
 	static void updateAll(double);
 
 	static void renderAll(matrix4, matrix4);
+
+	static void setDebugMode(bool);
 };
 

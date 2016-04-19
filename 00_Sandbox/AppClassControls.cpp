@@ -1,5 +1,5 @@
 #include "AppClass.h"
-void AppClass::ProcessKeyboard(void)
+void App::ProcessKeyboard(void)
 {
 	bool bModifier = false;
 	float fSpeed = 0.01f;
@@ -53,7 +53,7 @@ void AppClass::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));
 #pragma endregion
 }
-void AppClass::ProcessMouse(void)
+void App::ProcessMouse(void)
 {
 	m_bArcBall = false;
 	m_bFPC = false;
