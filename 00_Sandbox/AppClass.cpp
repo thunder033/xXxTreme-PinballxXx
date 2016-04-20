@@ -25,8 +25,6 @@ void App::InitVariables(void)
 	Table = new PinballTable();
 
 	new GameObject();
-	GameObject::setAABBDebugMode(true);
-	GameObject::setNABDebugMode(true);
 }
 
 void App::Update(void)

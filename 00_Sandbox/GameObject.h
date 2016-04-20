@@ -56,9 +56,7 @@ public:
 
 	static void renderAll(matrix4, matrix4);
 
-	static void setAABBDebugMode(bool);
-
-	static void setNABDebugMode(bool);
+	static void toggleDebugMode(int colliderType);
 
 	static void cycleSelectedIndex(bool);
 

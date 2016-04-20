@@ -26,6 +26,8 @@ GameObject::GameObject(MeshClass * mesh)
 
 	GameObject::instances.push_back(this);
 	collider = new Collider(mesh->GetVertexList());
+
+	debugAABBMode, debugNABMode = true;
 }
 
 GameObject::~GameObject()
@@ -130,27 +132,28 @@ void GameObject::renderAll(matrix4 projection, matrix4 view)
 	}
 }
 
-void GameObject::setAABBDebugMode(bool debugMode)
+void GameObject::toggleDebugMode(int colliderType)
 {
+	if (colliderType == AABB)
+	{
+		for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
+		{
+			(*it)->debugAABBMode = !(*it)->debugAABBMode;
+		}
+		return;
+	}
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
-		(*it)->debugAABBMode = debugMode;
+		(*it)->debugNABMode = !(*it)->debugNABMode;
 	}
 }
 
-void GameObject::setNABDebugMode(bool debugMode)
-{
-	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
-	{
-		(*it)->debugNABMode = debugMode;
-	}
-}
 void GameObject::cycleSelectedIndex(bool direction)
 {
 	if (direction)
 	{
 		selectedInstanceIndex += 1;
-		if (selectedInstanceIndex >= instances.size())
+		if (selectedInstanceIndex >= (int)instances.size())
 		{
 			selectedInstanceIndex = 0;
 		}

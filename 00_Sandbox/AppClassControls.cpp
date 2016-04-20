@@ -54,6 +54,8 @@ void App::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F6, GameObject::cycleSelectedIndex(false), NULL);
 	ON_KEY_PRESS_RELEASE(F7, GameObject::toggleSelectedDebugMode(AABB), NULL);
 	ON_KEY_PRESS_RELEASE(F8, GameObject::toggleSelectedDebugMode(NAB), NULL);
+	ON_KEY_PRESS_RELEASE(F9, GameObject::toggleDebugMode(AABB), NULL);
+	ON_KEY_PRESS_RELEASE(F10, GameObject::toggleDebugMode(NAB), NULL);
 	static bool bFPSControll = false;
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));
 #pragma endregion
