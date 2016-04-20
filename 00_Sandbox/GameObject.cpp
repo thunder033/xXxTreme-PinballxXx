@@ -75,30 +75,33 @@ void GameObject::SetDebugColor(vector3 newColor)
 void GameObject::Rotate(quaternion rotation)
 {
 	this->rotation = this->rotation * rotation;
-	collider->Rotate(this->rotation);
+	collider->RotateTo(this->rotation);
 }
 
 void GameObject::RotateTo(quaternion rotation)
 {
 	this->rotation = rotation;
-	collider->Rotate(rotation);
-}
-
-void GameObject::Translate(vector3 position)
-{
-	this->position += position;
-}
-
-void GameObject::Scale(float scale)
-{
-	this->scale *= vector3(scale);
+	collider->RotateTo(rotation);
 }
 
 void GameObject::RotateTo(vector3 orientation)
 {
 	this->rotation = quaternion(orientation);
-	collider->Rotate(rotation);
+	collider->RotateTo(rotation);
 }
+
+void GameObject::Translate(vector3 position)
+{
+	this->position += position;
+	collider->SetPosition(this->position);
+}
+
+void GameObject::Scale(float scale)
+{
+	this->scale *= vector3(scale);
+	collider->SetScale(this->scale);
+}
+
 
 void GameObject::Update(double deltaTime)
 {
@@ -111,7 +114,7 @@ void GameObject::Update(double deltaTime)
 		if (*it == this)
 			continue;
 
-		bool colliding = (*it)->collider->isColliding(this->collider);
+		bool colliding = (*it)->collider->IsColliding(this->collider);
 		hasFrameCollisions = hasFrameCollisions || colliding;
 	}
 }

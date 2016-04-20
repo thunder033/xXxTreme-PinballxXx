@@ -85,9 +85,14 @@ public:
 	*/
 	float GetRadius(void);
 
-	std::vector<vector3> Rotate(quaternion);
+	std::vector<vector3> RotateTo(quaternion);
+
+	void SetPosition(vector3);
+
+	void SetScale(vector3);
+
 	vector3 GetSize(void);
-	matrix4 GetRot(void);
+	matrix4 GetRotation(void);
 	matrix4 GetAxisAlignedTransform(void);
 	vector3 GetMin();
 	vector3 GetMax();
@@ -99,7 +104,7 @@ public:
 	Collider* const a_pOther -> Other object to check collision with
 	OUTPUT: bool -> check of the collision
 	*/
-	bool isColliding(Collider* const a_pOther);
+	bool IsColliding(Collider* const a_pOther);
 
 private:
 	/*

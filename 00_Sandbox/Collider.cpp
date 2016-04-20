@@ -91,7 +91,7 @@ Collider::~Collider() { Release(); };
 void Collider::SetModelMatrix(matrix4 a_m4ToWorld) { worldTransform = a_m4ToWorld; }
 vector3 Collider::GetCenter(void) { return vector3(worldTransform * vector4(origin, 1.0f)); }
 float Collider::GetRadius(void) { return radius; }
-std::vector<vector3> Collider::Rotate(quaternion rot)
+std::vector<vector3> Collider::RotateTo(quaternion rot)
 {
 	rotation = rot;
 
@@ -123,13 +123,23 @@ std::vector<vector3> Collider::Rotate(quaternion rot)
 	return box;
 }
 
+void Collider::SetPosition(vector3 position)
+{
+	worldTransform *= glm::translate(position);
+}
+
+void Collider::SetScale(vector3 scale)
+{
+	//Add scale
+}
+
 matrix4 Collider::GetAxisAlignedTransform()
 {
 	return glm::translate(GetCenter()) * glm::scale(alignedSize);
 }
 
 vector3 Collider::GetSize(void) { return size; }
-matrix4 Collider::GetRot(void)
+matrix4 Collider::GetRotation(void)
 {
 	return ToMatrix4(rotation);
 }
@@ -144,7 +154,7 @@ vector3 Collider::GetMax() {
 }
 
 //--- Non Standard Singleton Methods
-bool Collider::isColliding(Collider* const a_pOther)
+bool Collider::IsColliding(Collider* const a_pOther)
 {
 	float dist = glm::distance(GetCenter(), a_pOther->GetCenter());
 	if (dist > (GetRadius() + a_pOther->GetRadius()))
