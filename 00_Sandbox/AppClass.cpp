@@ -27,8 +27,12 @@ void App::InitVariables(void)
 	GameObject* obj = new GameObject();
 	obj->Rotate(quaternion(vector3(45, 45, 45)));
 
-	obj2 = new GameObject();
+	PrimitiveClass* cone = new PrimitiveClass();
+	cone->GenerateCone(1, 1.5f, 10, REBLUE);
+
+	obj2 = new GameObject(cone);
 	obj2->Translate(vector3(3, 0, 0));
+	obj2->Rotate(quaternion(vector3(0, 45, 0)));
 }
 
 void App::Update(void)
@@ -63,8 +67,8 @@ void App::Update(void)
 	//Print info on the screen
 	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
 
-	m_pMeshMngr->Print("Selection: ");
-	m_pMeshMngr->PrintLine(m_pMeshMngr->GetInstanceGroupName(m_selection.first, m_selection.second), REYELLOW);
+	m_pMeshMngr->Print("Number of Game Objects: ");
+	m_pMeshMngr->PrintLine(std::to_string(GameObject::GetGameObjectCount()), REYELLOW);
 	
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);

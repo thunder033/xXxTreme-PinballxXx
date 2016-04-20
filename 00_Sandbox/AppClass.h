@@ -96,9 +96,5 @@ public:
 	*/
 	virtual void Release(void) final;
 };
-/*
-USAGE:
-ARGUMENTS: ---
-OUTPUT: ---
-*/
+
 #endif //__APPLICATION_H_

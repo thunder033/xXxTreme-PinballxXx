@@ -125,7 +125,7 @@ std::vector<vector3> Collider::RotateTo(quaternion rot)
 
 void Collider::SetPosition(vector3 position)
 {
-	worldTransform *= glm::translate(position);
+	worldTransform[3] = vector4(position, 1.0f);
 }
 
 void Collider::SetScale(vector3 scale)

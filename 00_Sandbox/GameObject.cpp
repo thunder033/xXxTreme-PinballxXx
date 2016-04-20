@@ -133,7 +133,7 @@ void GameObject::RenderAABBDebugHelpers()
 void GameObject::RenderNABDebugHelpers()
 {
 	vector3 color = hasFrameCollisions ? RERED : debugColor;
-	renderer->AddCubeToQueue(GetTransform(), color, WIRE);
+	renderer->AddCubeToQueue(GetTransform() * glm::scale(collider->GetSize()), color, WIRE);
 }
 
 /*
@@ -218,5 +218,10 @@ void GameObject::ToggleSelectedDebugMode(int colliderType)
 		return;
 	}
 	instances[selectedInstanceIndex]->debugNABMode = !instances[selectedInstanceIndex]->debugNABMode;
+}
+
+int GameObject::GetGameObjectCount()
+{
+	return instances.size();
 }
 

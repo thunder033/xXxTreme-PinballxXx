@@ -75,5 +75,7 @@ public:
 	static void SetSelectedColor(vector3);
 
 	static void ToggleSelectedDebugMode(int);
+
+	static int GetGameObjectCount();
 };
 
