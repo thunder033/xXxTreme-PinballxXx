@@ -185,6 +185,7 @@ void GameObject::ToggleDebugMode(int colliderType)
 }
 void GameObject::CycleSelectedIndex(bool direction)
 {
+	SetSelectedColor(REGREEN);
 	if (direction)
 	{
 		selectedInstanceIndex += 1;
