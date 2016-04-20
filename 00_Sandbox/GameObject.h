@@ -33,37 +33,47 @@ public:
 	GameObject(MeshClass*);
 	~GameObject();
 
-	vector3 getOrigin();
+	vector3 GetOrigin();
 
-	vector3 getPosition();
+	vector3 GetPosition();
 
-	matrix4 getTransform();
+	quaternion GetRotation();
 
-	void setDebugColor(vector3 newColor);
+	matrix4 GetTransform();
 
-	void update(double);
+	void SetDebugColor(vector3 newColor);
 
-	void render(matrix4, matrix4);
+	void Rotate(quaternion);
 
-	void renderAABBDebugHelpers();
+	void Translate(vector3);
 
-	void renderNABDebugHelpers();
+	void Scale(float);
+
+	void RotateTo(vector3);
+
+	void Update(double);
+
+	void Render(matrix4, matrix4);
+
+	void RenderAABBDebugHelpers();
+
+	void RenderNABDebugHelpers();
 
 	//Static GameObject Methods
 	//a.k.a BoundingObjectManager
-	static void init();
-	static void updateAll(double);
+	static void Init();
+	static void UpdateAll(double);
 
-	static void renderAll(matrix4, matrix4);
+	static void RenderAll(matrix4, matrix4);
 
-	static void setAABBDebugMode(bool);
+	static void SetAABBDebugMode(bool);
 
-	static void setNABDebugMode(bool);
+	static void SetNABDebugMode(bool);
 
-	static void cycleSelectedIndex(bool);
+	static void CycleSelectedIndex(bool);
 
-	static void setSelectedColor(vector3);
+	static void SetSelectedColor(vector3);
 
-	static void toggleSelectedDebugMode(int);
+	static void ToggleSelectedDebugMode(int);
 };
 

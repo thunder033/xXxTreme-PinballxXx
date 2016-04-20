@@ -45,27 +45,54 @@ GameObject::~GameObject()
 	}
 }
 
-vector3 GameObject::getOrigin()
+vector3 GameObject::GetOrigin()
 {
 	return origin;
 }
 
-vector3 GameObject::getPosition()
+vector3 GameObject::GetPosition()
 {
 	return position;
 }
 
-matrix4 GameObject::getTransform()
+quaternion GameObject::GetRotation()
+{
+	return rotation;
+}
+
+matrix4 GameObject::GetTransform()
 {
 	return glm::translate(position) * ToMatrix4(rotation) * glm::scale(scale);
 }
 
-void GameObject::setDebugColor(vector3 newColor) 
+void GameObject::SetDebugColor(vector3 newColor) 
 {
 	debugColor = newColor;
 }
 
-void GameObject::update(double deltaTime)
+void GameObject::Rotate(quaternion rotation)
+{
+	this->rotation = this->rotation * rotation;
+	collider->Rotate(rotation);
+}
+
+void GameObject::Translate(vector3 position)
+{
+	this->position += position;
+}
+
+void GameObject::Scale(float scale)
+{
+	this->scale *= vector3(scale);
+}
+
+void GameObject::RotateTo(vector3 orientation)
+{
+	this->rotation = quaternion(orientation);
+	collider->Rotate(rotation);
+}
+
+void GameObject::Update(double deltaTime)
 {
 	velocity += acceleration * static_cast<float>(deltaTime);
 	position += velocity * static_cast<float>(deltaTime);
@@ -81,56 +108,56 @@ void GameObject::update(double deltaTime)
 	}
 }
 
-void GameObject::render(matrix4 projection, matrix4 view)
+void GameObject::Render(matrix4 projection, matrix4 view)
 {
-	mesh->Render(projection, view, getTransform());
+	mesh->Render(projection, view, GetTransform());
 }
 
-void GameObject::renderAABBDebugHelpers()
+void GameObject::RenderAABBDebugHelpers()
 {
 	vector3 color = hasFrameCollisions ? RERED : debugColor;
 	renderer->AddCubeToQueue(collider->GetAxisAlignedTransform(), color, WIRE);
 }
 
-void GameObject::renderNABDebugHelpers()
+void GameObject::RenderNABDebugHelpers()
 {
 	vector3 color = hasFrameCollisions ? RERED : debugColor;
-	renderer->AddCubeToQueue(getTransform(), color, WIRE);
+	renderer->AddCubeToQueue(GetTransform(), color, WIRE);
 }
 
 /*
 ***BEGIN STATIC (BOUNDING BOX MANAGER) METHODS***
 */
-void GameObject::init()
+void GameObject::Init()
 {
 	renderer = MeshManagerSingleton::GetInstance();
 	instances = std::vector<GameObject*>();
 	selectedInstanceIndex = 0;
 }
 
-void GameObject::updateAll(double deltaTime)
+void GameObject::UpdateAll(double deltaTime)
 {
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
-		(*it)->update(deltaTime);
+		(*it)->Update(deltaTime);
 	}
 }
 
-void GameObject::renderAll(matrix4 projection, matrix4 view)
+void GameObject::RenderAll(matrix4 projection, matrix4 view)
 {
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
-		(*it)->render(projection, view);
+		(*it)->Render(projection, view);
 
 		if ((*it)->debugAABBMode)
-			(*it)->renderAABBDebugHelpers();
+			(*it)->RenderAABBDebugHelpers();
 
 		if ((*it)->debugNABMode)
-			(*it)->renderNABDebugHelpers();
+			(*it)->RenderNABDebugHelpers();
 	}
 }
 
-void GameObject::setAABBDebugMode(bool debugMode)
+void GameObject::SetAABBDebugMode(bool debugMode)
 {
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
@@ -138,14 +165,14 @@ void GameObject::setAABBDebugMode(bool debugMode)
 	}
 }
 
-void GameObject::setNABDebugMode(bool debugMode)
+void GameObject::SetNABDebugMode(bool debugMode)
 {
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
 		(*it)->debugNABMode = debugMode;
 	}
 }
-void GameObject::cycleSelectedIndex(bool direction)
+void GameObject::CycleSelectedIndex(bool direction)
 {
 	if (direction)
 	{
@@ -163,15 +190,15 @@ void GameObject::cycleSelectedIndex(bool direction)
 			selectedInstanceIndex = instances.size() - 1;
 		}
 	}
-	setSelectedColor(REYELLOW);
+	SetSelectedColor(REYELLOW);
 }
 
-void GameObject::setSelectedColor(vector3 newColor)
+void GameObject::SetSelectedColor(vector3 newColor)
 {
-	instances[selectedInstanceIndex]->setDebugColor(newColor);
+	instances[selectedInstanceIndex]->SetDebugColor(newColor);
 }
 
-void GameObject::toggleSelectedDebugMode(int colliderType)
+void GameObject::ToggleSelectedDebugMode(int colliderType)
 {
 	if (colliderType)
 	{

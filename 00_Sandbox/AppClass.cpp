@@ -12,7 +12,7 @@ void App::InitWindow(String a_sWindowName)
 
 void App::InitVariables(void)
 {
-	GameObject::init();
+	GameObject::Init();
 
 	//Reset the selection to -1, -1
 	m_selection = std::pair<int, int>(-1, -1);
@@ -24,9 +24,10 @@ void App::InitVariables(void)
 
 	Table = new PinballTable();
 
-	new GameObject();
-	GameObject::setAABBDebugMode(true);
-	GameObject::setNABDebugMode(true);
+	GameObject* obj = new GameObject();
+	obj->Rotate(quaternion(vector3(45, 45, 45)));
+	GameObject::SetAABBDebugMode(true);
+	GameObject::SetNABDebugMode(true);
 }
 
 void App::Update(void)
@@ -47,7 +48,7 @@ void App::Update(void)
 	//Set the model matrix for the first model to be the arcball
 	m_pMeshMngr->SetModelMatrix(ToMatrix4(m_qArcBall), 0);
 
-	GameObject::updateAll(m_pSystem->LapClock());
+	GameObject::UpdateAll(m_pSystem->LapClock());
 	
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
@@ -92,7 +93,7 @@ void App::Display(void)
 	matrix4 projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 view = m_pCameraMngr->GetViewMatrix();
 
-	GameObject::renderAll(projection, view);
+	GameObject::RenderAll(projection, view);
 	//Table->Render(projection, view);
 	
 	m_pMeshMngr->Render(); //renders the render list
