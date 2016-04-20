@@ -1,8 +1,8 @@
 #include "GameObject.h"
 
 std::vector<GameObject*> GameObject::instances;
-bool GameObject::debugMode;
 MeshManagerSingleton* GameObject::renderer;
+int GameObject::selectedInstanceIndex;
 
 GameObject::GameObject() : GameObject(new PrimitiveClass())
 {
@@ -60,6 +60,11 @@ matrix4 GameObject::getTransform()
 	return glm::translate(position) * ToMatrix4(rotation) * glm::scale(scale);
 }
 
+void GameObject::setDebugColor(vector3 newColor) 
+{
+	debugColor = newColor;
+}
+
 void GameObject::update(double deltaTime)
 {
 	velocity += acceleration * static_cast<float>(deltaTime);
@@ -81,10 +86,16 @@ void GameObject::render(matrix4 projection, matrix4 view)
 	mesh->Render(projection, view, getTransform());
 }
 
-void GameObject::renderDebugHelpers()
+void GameObject::renderAABBDebugHelpers()
 {
 	vector3 color = hasFrameCollisions ? RERED : debugColor;
 	renderer->AddCubeToQueue(collider->GetAxisAlignedTransform(), color, WIRE);
+}
+
+void GameObject::renderNABDebugHelpers()
+{
+	vector3 color = hasFrameCollisions ? RERED : debugColor;
+	renderer->AddCubeToQueue(getTransform(), color, WIRE);
 }
 
 /*
@@ -94,7 +105,7 @@ void GameObject::init()
 {
 	renderer = MeshManagerSingleton::GetInstance();
 	instances = std::vector<GameObject*>();
-	debugMode = false;
+	selectedInstanceIndex = 0;
 }
 
 void GameObject::updateAll(double deltaTime)
@@ -111,12 +122,62 @@ void GameObject::renderAll(matrix4 projection, matrix4 view)
 	{
 		(*it)->render(projection, view);
 
-		if (debugMode)
-			(*it)->renderDebugHelpers();
+		if ((*it)->debugAABBMode)
+			(*it)->renderAABBDebugHelpers();
+
+		if ((*it)->debugNABMode)
+			(*it)->renderNABDebugHelpers();
 	}
 }
 
-void GameObject::setDebugMode(bool debugMode)
+void GameObject::setAABBDebugMode(bool debugMode)
 {
-	GameObject::debugMode = debugMode;
+	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
+	{
+		(*it)->debugAABBMode = debugMode;
+	}
 }
+
+void GameObject::setNABDebugMode(bool debugMode)
+{
+	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
+	{
+		(*it)->debugNABMode = debugMode;
+	}
+}
+void GameObject::cycleSelectedIndex(bool direction)
+{
+	if (direction)
+	{
+		selectedInstanceIndex += 1;
+		if (selectedInstanceIndex >= instances.size())
+		{
+			selectedInstanceIndex = 0;
+		}
+	}
+	else
+	{
+		selectedInstanceIndex -= 1;
+		if (selectedInstanceIndex < 0)
+		{
+			selectedInstanceIndex = instances.size() - 1;
+		}
+	}
+	setSelectedColor(REYELLOW);
+}
+
+void GameObject::setSelectedColor(vector3 newColor)
+{
+	instances[selectedInstanceIndex]->setDebugColor(newColor);
+}
+
+void GameObject::toggleSelectedDebugMode(int colliderType)
+{
+	if (colliderType)
+	{
+		instances[selectedInstanceIndex]->debugAABBMode = !instances[selectedInstanceIndex]->debugAABBMode;
+		return;
+	}
+	instances[selectedInstanceIndex]->debugNABMode = !instances[selectedInstanceIndex]->debugNABMode;
+}
+

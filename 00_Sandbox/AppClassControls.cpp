@@ -1,4 +1,5 @@
 #include "AppClass.h"
+#include "GameObject.h"
 void App::ProcessKeyboard(void)
 {
 	bool bModifier = false;
@@ -49,6 +50,10 @@ void App::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F2, NULL, m_pCameraMngr->SetCameraMode(CAMROTHOZ));
 	ON_KEY_PRESS_RELEASE(F3, NULL, m_pCameraMngr->SetCameraMode(CAMROTHOY));
 	ON_KEY_PRESS_RELEASE(F4, NULL, m_pCameraMngr->SetCameraMode(CAMROTHOX));
+	ON_KEY_PRESS_RELEASE(F5, GameObject::cycleSelectedIndex(true), NULL);
+	ON_KEY_PRESS_RELEASE(F6, GameObject::cycleSelectedIndex(false), NULL);
+	ON_KEY_PRESS_RELEASE(F7, GameObject::toggleSelectedDebugMode(AABB), NULL);
+	ON_KEY_PRESS_RELEASE(F8, GameObject::toggleSelectedDebugMode(NAB), NULL);
 	static bool bFPSControll = false;
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));
 #pragma endregion

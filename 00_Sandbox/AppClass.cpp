@@ -25,7 +25,8 @@ void App::InitVariables(void)
 	Table = new PinballTable();
 
 	new GameObject();
-	GameObject::setDebugMode(true);
+	GameObject::setAABBDebugMode(true);
+	GameObject::setNABDebugMode(true);
 }
 
 void App::Update(void)
@@ -87,7 +88,7 @@ void App::Display(void)
 		break;
 	}
 
-	Table->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix());
+	//Table->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix());
 	matrix4 projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 view = m_pCameraMngr->GetViewMatrix();
 
