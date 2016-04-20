@@ -75,6 +75,12 @@ void GameObject::SetDebugColor(vector3 newColor)
 void GameObject::Rotate(quaternion rotation)
 {
 	this->rotation = this->rotation * rotation;
+	collider->Rotate(this->rotation);
+}
+
+void GameObject::RotateTo(quaternion rotation)
+{
+	this->rotation = rotation;
 	collider->Rotate(rotation);
 }
 

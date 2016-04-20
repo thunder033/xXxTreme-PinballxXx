@@ -51,6 +51,8 @@ public:
 
 	void RotateTo(vector3);
 
+	void RotateTo(quaternion);
+
 	void Update(double);
 
 	void Render(matrix4, matrix4);

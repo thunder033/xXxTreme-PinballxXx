@@ -8,6 +8,7 @@ Date: 2015/09 (Last Modified on: 15/11)
 #include "RE\ReEngAppClass.h"
 #include "TheBigScore.h"
 #include "PinballTable.h"
+#include "GameObject.h"
 #include <SFML\Graphics.hpp>
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
@@ -16,6 +17,8 @@ class App : public ReEngAppClass
 {
 private:
 	PinballTable* Table;
+
+	GameObject* obj2;
 
 public:
 	typedef ReEngAppClass super;

@@ -26,6 +26,9 @@ void App::InitVariables(void)
 
 	GameObject* obj = new GameObject();
 	obj->Rotate(quaternion(vector3(45, 45, 45)));
+
+	obj2 = new GameObject();
+	obj2->Translate(vector3(3, 0, 0));
 }
 
 void App::Update(void)
@@ -45,6 +48,8 @@ void App::Update(void)
 	
 	//Set the model matrix for the first model to be the arcball
 	m_pMeshMngr->SetModelMatrix(ToMatrix4(m_qArcBall), 0);
+
+	obj2->RotateTo(m_qArcBall);
 
 	GameObject::UpdateAll(m_pSystem->LapClock());
 	
