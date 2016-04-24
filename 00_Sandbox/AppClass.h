@@ -9,6 +9,7 @@ Date: 2015/09 (Last Modified on: 15/11)
 #include "TheBigScore.h"
 #include "PinballTable.h"
 #include "GameObject.h"
+#include "Flipper.h"
 #include <SFML\Graphics.hpp>
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
@@ -19,7 +20,7 @@ private:
 	PinballTable* Table;
 
 	GameObject* obj2;
-
+	Flipper* flipper;
 public:
 	typedef ReEngAppClass super;
 

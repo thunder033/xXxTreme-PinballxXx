@@ -28,10 +28,12 @@ class GameObject
 	static std::vector<GameObject*> instances;
 	static int selectedInstanceIndex;
 	static MeshManagerSingleton* renderer;
+protected:
+	void Scale(vector3);
 public:
 	GameObject();
 	GameObject(MeshClass*);
-	~GameObject();
+	virtual ~GameObject();
 
 	/*
 	Sets the origin of the game object, which indicates how 
@@ -59,7 +61,7 @@ public:
 
 	void RotateTo(quaternion);
 
-	void Update(double);
+	virtual void Update(double);
 
 	void Render(matrix4, matrix4);
 

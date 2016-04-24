@@ -54,6 +54,9 @@ void App::ProcessKeyboard(void)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		obj2->Translate(vector3(0, -fSpeed, 0));
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		flipper->Flip();
 #pragma endregion
 
 #pragma region Other Actions

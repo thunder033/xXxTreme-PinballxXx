@@ -109,6 +109,11 @@ void GameObject::Scale(float scale)
 	collider->SetScale(this->scale);
 }
 
+void GameObject::Scale(vector3 scale)
+{
+	this->scale = vector3(this->scale.x * scale.x, this->scale.y * scale.y, this->scale.z * scale.z);
+	collider->SetScale(this->scale);
+}
 
 void GameObject::Update(double deltaTime)
 {

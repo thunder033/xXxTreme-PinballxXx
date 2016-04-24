@@ -1,5 +1,6 @@
 #include "AppClass.h"
 #include "GameObject.h"
+#include "Flipper.h"
 void App::InitWindow(String a_sWindowName)
 {
 	super::InitWindow("xXxTreme-PinballxXx"); // Window Name
@@ -34,6 +35,9 @@ void App::InitVariables(void)
 	obj2->Translate(vector3(3, 0, 0));
 	obj2->Rotate(quaternion(vector3(0, 45, 0)));
 	obj2->SetOrigin(vector3(0, 0.5f, 0));
+
+	flipper = new Flipper();
+	flipper->Translate(vector3(-3, 0, 0));
 }
 
 void App::Update(void)
@@ -102,7 +106,7 @@ void App::Display(void)
 	matrix4 view = m_pCameraMngr->GetViewMatrix();
 
 	GameObject::RenderAll(projection, view);
-	Table->Render(projection, view);
+	//Table->Render(projection, view);
 	
 	m_pMeshMngr->Render(); //renders the render list
 
