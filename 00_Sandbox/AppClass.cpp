@@ -33,6 +33,7 @@ void App::InitVariables(void)
 	obj2 = new GameObject(cone);
 	obj2->Translate(vector3(3, 0, 0));
 	obj2->Rotate(quaternion(vector3(0, 45, 0)));
+	obj2->SetOrigin(vector3(0, 0.5f, 0));
 }
 
 void App::Update(void)

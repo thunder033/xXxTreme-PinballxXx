@@ -14,6 +14,7 @@ GameObject::GameObject(MeshClass * mesh)
 {
 	this->mesh = mesh;
 
+	origin = vector3(0);
 	position = vector3(0);
 	velocity = vector3(0);
 	acceleration = vector3(0);
@@ -47,9 +48,15 @@ GameObject::~GameObject()
 	}
 }
 
+void GameObject::SetOrigin(vector3 origin)
+{
+	this->origin = origin;
+	collider->SetPosition(vector3(GetTransform()[3]));
+}
+
 vector3 GameObject::GetOrigin()
 {
-	return origin;
+	return vector3(origin.x * scale.x, origin.y * scale.y, origin.z * scale.z);
 }
 
 vector3 GameObject::GetPosition()
@@ -64,7 +71,7 @@ quaternion GameObject::GetRotation()
 
 matrix4 GameObject::GetTransform()
 {
-	return glm::translate(position) * ToMatrix4(rotation) * glm::scale(scale);
+	return glm::translate(position) * ToMatrix4(rotation) * glm::translate(GetOrigin()*(-1.0f)) * glm::scale(scale);
 }
 
 void GameObject::SetDebugColor(vector3 newColor) 
@@ -90,10 +97,10 @@ void GameObject::RotateTo(vector3 orientation)
 	collider->RotateTo(rotation);
 }
 
-void GameObject::Translate(vector3 position)
+void GameObject::Translate(vector3 displacement)
 {
-	this->position += position;
-	collider->SetPosition(this->position);
+	position += displacement;
+	collider->SetPosition(vector3(GetTransform()[3]));
 }
 
 void GameObject::Scale(float scale)
@@ -106,8 +113,9 @@ void GameObject::Scale(float scale)
 void GameObject::Update(double deltaTime)
 {
 	velocity += acceleration * static_cast<float>(deltaTime);
-	position += velocity * static_cast<float>(deltaTime);
+	Translate(velocity * static_cast<float>(deltaTime));
 	hasFrameCollisions = false;
+	collider->SetModelMatrix(GetTransform());
 
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{

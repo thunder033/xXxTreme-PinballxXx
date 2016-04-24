@@ -33,6 +33,12 @@ public:
 	GameObject(MeshClass*);
 	~GameObject();
 
+	/*
+	Sets the origin of the game object, which indicates how 
+	far from the center rotations and scales will be performed
+	*/
+	void SetOrigin(vector3);
+
 	vector3 GetOrigin();
 
 	vector3 GetPosition();
