@@ -120,7 +120,7 @@ std::vector<vector3> Collider::GetBoundingBox()
 void Collider::setType(ColliderType type)
 {
 	this->type = type;
-	if (type == Circle) {
+	if (type == ColliderType::Circle) {
 		radius = 1;
 	}
 }
@@ -157,8 +157,8 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		return false;
 
 	if (type != a_pOther->type) {
-		Collider* box = type == CT_AABB ? this : a_pOther;
-		Collider* circle = type == Circle ? this : a_pOther;
+		Collider* box = type == ColliderType::AABB ? this : a_pOther;
+		Collider* circle = type == ColliderType::Circle ? this : a_pOther;
 
 		std::vector<vector3> boxPts = box->GetBoundingBox();
 		std::sort(boxPts.begin(), boxPts.end(), [circle, box](vector3 a, vector3 b) -> bool {
@@ -197,7 +197,7 @@ bool Collider::IsColliding(Collider* const a_pOther)
 
 		return false;
 	}
-	else if (type == Circle) {
+	else if (type == ColliderType::Circle) {
 		return false;
 	}
 	else {

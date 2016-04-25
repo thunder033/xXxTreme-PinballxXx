@@ -102,12 +102,11 @@ void App::Display(void)
 		break;
 	}
 
-	//Table->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix());
 	matrix4 projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 view = m_pCameraMngr->GetViewMatrix();
 
 	GameObject::RenderAll(projection, view);
-	//Table->Render(projection, view);
+	Table->Render(projection, view);
 	
 	m_pMeshMngr->Render(); //renders the render list
 
