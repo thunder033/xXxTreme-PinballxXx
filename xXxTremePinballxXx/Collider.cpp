@@ -91,10 +91,9 @@ Collider::~Collider() { Release(); };
 void Collider::SetModelMatrix(matrix4 a_m4ToWorld) { worldTransform = a_m4ToWorld; }
 vector3 Collider::GetCenter(void) { return vector3(worldTransform * vector4(origin, 1.0f)); }
 float Collider::GetRadius(void) { return radius; }
-std::vector<vector3> Collider::RotateTo(quaternion rot)
-{
-	rotation = rot;
 
+std::vector<vector3> Collider::GetBoundingBox()
+{
 	float fValue = 0.5f;
 	//3--2
 	//|  |
@@ -115,6 +114,22 @@ std::vector<vector3> Collider::RotateTo(quaternion rot)
 		box[i] = vector3(ToMatrix4(rotation) * glm::translate(origin) * glm::scale(size) * vector4(box[i], 1));
 	}
 
+	return box;
+}
+
+void Collider::setType(ColliderType type)
+{
+	this->type = type;
+	if (type == Circle) {
+		radius = 1;
+	}
+}
+
+std::vector<vector3> Collider::RotateTo(quaternion rot)
+{
+	rotation = rot;
+
+	std::vector<vector3> box = GetBoundingBox();
 	GetMinMax(min, max, box);
 	alignedSize.x = max.x - min.x;
 	alignedSize.y = max.y - min.y;
@@ -160,13 +175,38 @@ bool Collider::IsColliding(Collider* const a_pOther)
 	if (dist > (GetRadius() + a_pOther->GetRadius()))
 		return false;
 
-	vector3 v3Min = GetMin();
-	vector3 v3MinO = a_pOther->GetMin();
+	if (type != a_pOther->type) {
+		Collider* box = type == AABB ? this : a_pOther;
+		Collider* circle = type == Circle ? this : a_pOther;
 
-	vector3 v3Max = GetMax();
-	vector3 v3MaxO = a_pOther->GetMax();
+		std::vector<vector3> boxPts = box->GetBoundingBox();
+		//std::sort(boxPts.begin(), boxPts.end(), [circle](vector3 a, vector3 b) -> bool {
+		//	return (a - circle->GetCenter()).length() > (b - circle->GetCenter()).length();
+		//});
+		//std::vector<vector3> displacements = {};
+		for (int i = 0; i < 8; i++) {
+			//displacements.push_back(boxPts[i] - circle->GetCenter());
+			vector3 point = box->GetCenter() + boxPts[i];
+			if (glm::distance(point, circle->GetCenter()) < circle->GetRadius())
+				return true;
+		}
 
-	return !(v3Min.x > v3MaxO.x || v3MinO.x > v3Max.x ||
-		v3Min.y > v3MaxO.y || v3MinO.y > v3Max.y ||
-		v3Min.z > v3MaxO.z || v3MinO.z > v3Max.z);
+		return false;
+	}
+	else if (type == Circle) {
+		return false;
+	}
+	else {
+		vector3 v3Min = GetMin();
+		vector3 v3MinO = a_pOther->GetMin();
+
+		vector3 v3Max = GetMax();
+		vector3 v3MaxO = a_pOther->GetMax();
+
+		return !(v3Min.x > v3MaxO.x || v3MinO.x > v3Max.x ||
+			v3Min.y > v3MaxO.y || v3MinO.y > v3Max.y ||
+			v3Min.z > v3MaxO.z || v3MinO.z > v3Max.z);
+	}
+
+	
 }

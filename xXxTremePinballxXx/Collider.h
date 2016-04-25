@@ -7,7 +7,11 @@ Date: 2015/10
 
 #include "RE\ReEngAppClass.h"
 
-
+enum ColliderType
+{
+	Circle = 0,
+	AABB
+};
 //System Class
 class Collider
 {
@@ -19,6 +23,7 @@ class Collider
 	vector3 size = vector3(0.0f);
 	vector3 alignedSize = vector3(0.0f);
 	quaternion rotation = quaternion();
+	ColliderType type = AABB;
 
 	void GetMinMax(vector3& min, vector3& max, std::vector<vector3> points);
 public:
@@ -96,6 +101,8 @@ public:
 	matrix4 GetAxisAlignedTransform(void);
 	vector3 GetMin();
 	vector3 GetMax();
+	std::vector<vector3> GetBoundingBox();
+	void setType(ColliderType);
 
 	/*
 	IsColliding

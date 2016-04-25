@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xXxTreme PinballxXx", "00_Sandbox\00_Sandbox_VS15.vcxproj", "{F5D6D2E1-6FFD-402B-8EE3-DED4FE407028}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xXxTreme PinballxXx", "xXxTremePinballxXx\xXxTremePinballxXx.vcxproj", "{F5D6D2E1-6FFD-402B-8EE3-DED4FE407028}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4935C552-2868-4C08-84F9-42A9B134E4A0}"
 	ProjectSection(SolutionItems) = preProject

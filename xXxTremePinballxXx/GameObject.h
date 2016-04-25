@@ -17,7 +17,6 @@ class GameObject
 	float mass;
 	float elasictiy;
 
-	Collider* collider;
 	MeshClass* mesh;
 
 	bool hasFrameCollisions;
@@ -29,6 +28,7 @@ class GameObject
 	static int selectedInstanceIndex;
 	static MeshManagerSingleton* renderer;
 protected:
+	Collider* collider;
 	void Scale(vector3);
 public:
 	GameObject();

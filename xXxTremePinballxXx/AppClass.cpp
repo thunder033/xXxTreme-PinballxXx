@@ -1,6 +1,7 @@
 #include "AppClass.h"
 #include "GameObject.h"
 #include "Flipper.h"
+#include "Ball.h"
 void App::InitWindow(String a_sWindowName)
 {
 	super::InitWindow("xXxTreme-PinballxXx"); // Window Name
@@ -25,16 +26,16 @@ void App::InitVariables(void)
 
 	Table = new PinballTable();
 
-	GameObject* obj = new GameObject();
-	obj->Rotate(quaternion(vector3(45, 45, 45)));
+	//GameObject* obj = new GameObject();
+	//obj->Rotate(quaternion(vector3(45, 45, 45)));
 
 	PrimitiveClass* cone = new PrimitiveClass();
 	cone->GenerateCone(1, 1.5f, 10, REBLUE);
 
-	obj2 = new GameObject(cone);
+	obj2 = new Ball();
 	obj2->Translate(vector3(3, 0, 0));
-	obj2->Rotate(quaternion(vector3(0, 45, 0)));
-	obj2->SetOrigin(vector3(0, 0.5f, 0));
+	//obj2->Rotate(quaternion(vector3(0, 45, 0)));
+	//obj2->SetOrigin(vector3(0, 0.5f, 0));
 
 	flipper = new Flipper();
 	flipper->Translate(vector3(-3, 0, 0));
