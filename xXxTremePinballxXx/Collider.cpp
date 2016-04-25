@@ -161,16 +161,37 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		Collider* circle = type == Circle ? this : a_pOther;
 
 		std::vector<vector3> boxPts = box->GetBoundingBox();
-		//std::sort(boxPts.begin(), boxPts.end(), [circle](vector3 a, vector3 b) -> bool {
-		//	return (a - circle->GetCenter()).length() > (b - circle->GetCenter()).length();
-		//});
+		std::sort(boxPts.begin(), boxPts.end(), [circle, box](vector3 a, vector3 b) -> bool {
+			return glm::distance(box->GetCenter() + a, circle->GetCenter()) < glm::distance(box->GetCenter() + b, circle->GetCenter());
+		});
 		//std::vector<vector3> displacements = {};
 		for (int i = 0; i < 8; i++) {
 			//displacements.push_back(boxPts[i] - circle->GetCenter());
 			vector3 point = box->GetCenter() + boxPts[i];
-			float radius = circle->GetRadius();
-			float dist = glm::distance(point, circle->GetCenter());
 			if (glm::distance(point, circle->GetCenter()) < circle->GetRadius())
+				return true;
+		}
+
+		vector3 disp = circle->GetCenter() - (box->GetCenter() + boxPts[0]);
+		vector3 disp2 = circle->GetCenter() - (box->GetCenter() + boxPts[7]);
+		for (int i = 1; i < 8; i++) {
+			//if (boxPts[i].x != boxPts[0].x && boxPts[i].y != boxPts[0].y && boxPts[i].z != boxPts[0].z)
+			//	continue;
+
+			vector3 edge = boxPts[i] - boxPts[0];
+			vector3 center = box->GetCenter();
+			vector3 point = box->GetCenter() + boxPts[i];
+
+			//project the displacement from the closest point to the sphere onto the edge
+			float dotProduct = glm::dot(disp, edge);
+			if (dotProduct < 0)
+				continue;
+
+			float edgeLength = glm::length(edge);
+			vector3 intersection = point - (dotProduct / edgeLength) * (edge / edgeLength);
+			float dist = glm::distance(intersection, circle->GetCenter());
+
+			if (dist < circle->GetRadius())
 				return true;
 		}
 
