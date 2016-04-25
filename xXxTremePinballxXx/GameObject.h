@@ -1,18 +1,14 @@
 #include "RE\ReEngAppClass.h"
 #include "Collider.h"
+#include "GOTransform.h"
 #define AABB 0
 #define NAB 1
 
 #pragma once
 class GameObject
 {
-	vector3 origin;
-	vector3 position;
 	vector3 velocity;
 	vector3 acceleration;
-
-	vector3 scale;
-	quaternion rotation;
 
 	float mass;
 	float elasictiy;
@@ -30,6 +26,7 @@ class GameObject
 protected:
 	Collider* collider;
 	void Scale(vector3);
+	GOTransform* transform;
 public:
 	GameObject();
 	GameObject(MeshClass*);
@@ -41,19 +38,19 @@ public:
 	*/
 	void SetOrigin(vector3);
 
-	vector3 GetOrigin();
+	inline vector3 GetOrigin();
 
-	vector3 GetPosition();
+	inline vector3 GetPosition();
 
-	quaternion GetRotation();
+	inline quaternion GetRotation();
 
-	matrix4 GetTransform();
+	GOTransform* GetTransform();
 
 	void SetDebugColor(vector3 newColor);
 
 	void Rotate(quaternion);
 
-	void Translate(vector3);
+	inline void Translate(vector3);
 
 	void Scale(float);
 

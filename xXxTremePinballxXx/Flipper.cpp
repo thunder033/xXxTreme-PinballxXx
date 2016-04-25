@@ -8,7 +8,7 @@ Flipper::Flipper() : GameObject((mesh = new PrimitiveClass(), mesh->GenerateCube
 	Scale(vector3(2, .5f, .5f));
 
 	flipRotation = vector3(0, 0, PI / 2.0f);
-	flipStart = GetRotation();
+	flipStart = transform->GetRotation();
 	flipPct = 0;
 	flipSpeed = 5.0f;
 	flipping = false;

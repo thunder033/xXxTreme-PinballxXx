@@ -7,26 +7,22 @@ int GameObject::selectedInstanceIndex;
 GameObject::GameObject() : GameObject(new PrimitiveClass())
 {
 	(static_cast<PrimitiveClass*>(mesh))->GenerateCube(1, REWHITE);
-	collider = new Collider(mesh->GetVertexList());
+	collider = new Collider(mesh->GetVertexList(), transform);
 }
 
 GameObject::GameObject(MeshClass * mesh)
 {
 	this->mesh = mesh;
+	transform = new GOTransform();
 
-	origin = vector3(0);
-	position = vector3(0);
 	velocity = vector3(0);
 	acceleration = vector3(0);
-
-	scale = vector3(1);
-	rotation = quaternion(vector3(0));
 
 	hasFrameCollisions = false;
 	debugColor = REGREEN;
 
 	GameObject::instances.push_back(this);
-	collider = new Collider(mesh->GetVertexList());
+	collider = new Collider(mesh->GetVertexList(), transform);
 
 	debugAABBMode, debugNABMode = true;
 }
@@ -46,32 +42,36 @@ GameObject::~GameObject()
 		delete collider;
 		collider = nullptr;
 	}
+	if (transform != nullptr)
+	{
+		delete transform;
+		transform = nullptr;
+	}
 }
 
 void GameObject::SetOrigin(vector3 origin)
 {
-	this->origin = origin;
-	collider->SetPosition(vector3(GetTransform()[3]));
+	transform->SetOrigin(origin);
 }
 
 vector3 GameObject::GetOrigin()
 {
-	return vector3(origin.x * scale.x, origin.y * scale.y, origin.z * scale.z);
+	return transform->GetOrigin();
 }
 
 vector3 GameObject::GetPosition()
 {
-	return position;
+	return transform->GetPosition();
 }
 
 quaternion GameObject::GetRotation()
 {
-	return rotation;
+	return transform->GetRotation();
 }
 
-matrix4 GameObject::GetTransform()
+GOTransform* GameObject::GetTransform()
 {
-	return glm::translate(position) * ToMatrix4(rotation) * glm::translate(GetOrigin()*(-1.0f)) * glm::scale(scale);
+	return transform;
 }
 
 void GameObject::SetDebugColor(vector3 newColor) 
@@ -81,38 +81,37 @@ void GameObject::SetDebugColor(vector3 newColor)
 
 void GameObject::Rotate(quaternion rotation)
 {
-	this->rotation = this->rotation * rotation;
-	collider->RotateTo(this->rotation);
+	transform->Rotate(rotation);
+	collider->calculateAABB();
 }
 
-void GameObject::RotateTo(quaternion rotation)
+void GameObject::RotateTo(quaternion orientation)
 {
-	this->rotation = rotation;
-	collider->RotateTo(rotation);
+	transform->RotateTo(orientation);
+	collider->calculateAABB();
 }
 
 void GameObject::RotateTo(vector3 orientation)
 {
-	this->rotation = quaternion(orientation);
-	collider->RotateTo(rotation);
+	transform->RotateTo(orientation);
+	collider->calculateAABB();
 }
 
 void GameObject::Translate(vector3 displacement)
 {
-	position += displacement;
-	collider->SetPosition(vector3(GetTransform()[3]));
+	transform->Translate(displacement);
 }
 
 void GameObject::Scale(float scale)
 {
-	this->scale *= vector3(scale);
-	collider->SetScale(this->scale);
+	transform->Scale(scale);
+	collider->calculateAABB();
 }
 
 void GameObject::Scale(vector3 scale)
 {
-	this->scale = vector3(this->scale.x * scale.x, this->scale.y * scale.y, this->scale.z * scale.z);
-	collider->SetScale(this->scale);
+	transform->Scale(scale);
+	collider->calculateAABB();
 }
 
 void GameObject::Update(double deltaTime)
@@ -120,7 +119,6 @@ void GameObject::Update(double deltaTime)
 	velocity += acceleration * static_cast<float>(deltaTime);
 	Translate(velocity * static_cast<float>(deltaTime));
 	hasFrameCollisions = false;
-	collider->SetModelMatrix(GetTransform());
 
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
@@ -134,7 +132,7 @@ void GameObject::Update(double deltaTime)
 
 void GameObject::Render(matrix4 projection, matrix4 view)
 {
-	mesh->Render(projection, view, GetTransform());
+	mesh->Render(projection, view, transform->GetMatrix());
 }
 
 void GameObject::RenderAABBDebugHelpers()
@@ -146,7 +144,7 @@ void GameObject::RenderAABBDebugHelpers()
 void GameObject::RenderNABDebugHelpers()
 {
 	vector3 color = hasFrameCollisions ? RERED : debugColor;
-	renderer->AddCubeToQueue(GetTransform() * glm::scale(collider->GetSize()), color, WIRE);
+	renderer->AddCubeToQueue(transform->GetMatrix() * glm::scale(collider->GetSize()), color, WIRE);
 }
 
 /*

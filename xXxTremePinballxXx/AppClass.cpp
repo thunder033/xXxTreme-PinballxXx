@@ -26,8 +26,8 @@ void App::InitVariables(void)
 
 	Table = new PinballTable();
 
-	//GameObject* obj = new GameObject();
-	//obj->Rotate(quaternion(vector3(45, 45, 45)));
+	GameObject* obj = new GameObject();
+	obj->Rotate(quaternion(vector3(45, 45, 45)));
 
 	PrimitiveClass* cone = new PrimitiveClass();
 	cone->GenerateCone(1, 1.5f, 10, REBLUE);

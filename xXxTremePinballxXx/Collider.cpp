@@ -4,26 +4,26 @@
 void Collider::Init(void)
 {
 	radius = 0.0f;
-	worldTransform = IDENTITY_M4;
-
-	origin = vector3(0.0f);
+	centroid = vector3(0.0f);
 	min = vector3(0.0f);
 	max = vector3(0.0f);
-
-
 }
 void Collider::Swap(Collider& other)
 {
 	std::swap(radius, other.radius);
-	std::swap(worldTransform, other.worldTransform);
+	std::swap(transform, other.transform);
 
-	std::swap(origin, other.origin);
+	std::swap(centroid, other.centroid);
 	std::swap(min, other.min);
 	std::swap(max, other.max);
 }
 void Collider::Release(void)
 {
-
+	if (transform != nullptr)
+	{
+		delete transform;
+		transform = nullptr;
+	}
 }
 
 void Collider::GetMinMax(vector3& min, vector3& max, std::vector<vector3> points) {
@@ -54,12 +54,13 @@ void Collider::GetMinMax(vector3& min, vector3& max, std::vector<vector3> points
 }
 
 //The big 3
-Collider::Collider(std::vector<vector3> a_lVectorList)
+Collider::Collider(std::vector<vector3> a_lVectorList, GOTransform* transform)
 {
+	this->transform = transform;
 	GetMinMax(min, max, a_lVectorList);
-	origin = (min + max) / 2.0f;
+	centroid = (min + max) / 2.0f;
 
-	radius = glm::distance(origin, max);
+	radius = glm::distance(centroid, max);
 
 	size.x = max.x - min.x;
 	size.y = max.y - min.y;
@@ -69,9 +70,9 @@ Collider::Collider(std::vector<vector3> a_lVectorList)
 Collider::Collider(Collider const& other)
 {
 	radius = other.radius;
-	worldTransform = other.worldTransform;
+	transform = other.transform;
 
-	origin = other.origin;
+	centroid = other.centroid;
 	min = other.min;
 	max = other.max;
 }
@@ -88,8 +89,7 @@ Collider& Collider::operator=(Collider const& other)
 }
 Collider::~Collider() { Release(); };
 //Accessors
-void Collider::SetModelMatrix(matrix4 a_m4ToWorld) { worldTransform = a_m4ToWorld; }
-vector3 Collider::GetCenter(void) { return vector3(worldTransform * vector4(origin, 1.0f)); }
+vector3 Collider::GetCenter(void) { return vector3(transform->GetMatrix() * vector4(centroid, 1.0f)); }
 float Collider::GetRadius(void) { return radius; }
 
 std::vector<vector3> Collider::GetBoundingBox()
@@ -111,7 +111,7 @@ std::vector<vector3> Collider::GetBoundingBox()
 	};
 
 	for (int i = 0; i < 8; i++) {
-		box[i] = vector3(ToMatrix4(rotation) * glm::translate(origin) * glm::scale(size) * vector4(box[i], 1));
+		box[i] = vector3(ToMatrix4(transform->GetRotation()) * glm::translate(centroid) * glm::scale(size) * glm::scale(transform->GetScale()) * vector4(box[i], 1));
 	}
 
 	return box;
@@ -125,27 +125,13 @@ void Collider::setType(ColliderType type)
 	}
 }
 
-std::vector<vector3> Collider::RotateTo(quaternion rot)
+void Collider::calculateAABB()
 {
-	rotation = rot;
-
 	std::vector<vector3> box = GetBoundingBox();
 	GetMinMax(min, max, box);
 	alignedSize.x = max.x - min.x;
 	alignedSize.y = max.y - min.y;
 	alignedSize.z = max.z - min.z;
-
-	return box;
-}
-
-void Collider::SetPosition(vector3 position)
-{
-	worldTransform[3] = vector4(position, 1.0f);
-}
-
-void Collider::SetScale(vector3 scale)
-{
-	//Add scale
 }
 
 matrix4 Collider::GetAxisAlignedTransform()
@@ -154,18 +140,13 @@ matrix4 Collider::GetAxisAlignedTransform()
 }
 
 vector3 Collider::GetSize(void) { return size; }
-matrix4 Collider::GetRotation(void)
-{
-	return ToMatrix4(rotation);
-}
-
 
 vector3 Collider::GetMin() {
-	return vector3(worldTransform[3] + vector4(min, 1.0f));
+	return vector3(transform->GetMatrix()[3] + vector4(min, 1.0f));
 }
 
 vector3 Collider::GetMax() {
-	return vector3(worldTransform[3] + vector4(max, 1.0f));
+	return vector3(transform->GetMatrix()[3] + vector4(max, 1.0f));
 }
 
 //--- Non Standard Singleton Methods
@@ -187,6 +168,8 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		for (int i = 0; i < 8; i++) {
 			//displacements.push_back(boxPts[i] - circle->GetCenter());
 			vector3 point = box->GetCenter() + boxPts[i];
+			float radius = circle->GetRadius();
+			float dist = glm::distance(point, circle->GetCenter());
 			if (glm::distance(point, circle->GetCenter()) < circle->GetRadius())
 				return true;
 		}
