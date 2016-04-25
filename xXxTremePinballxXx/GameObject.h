@@ -1,7 +1,7 @@
 #include "RE\ReEngAppClass.h"
 #include "Collider.h"
 #include "GOTransform.h"
-#define AABB 0
+#define CT_AABB 0
 #define NAB 1
 
 #pragma once

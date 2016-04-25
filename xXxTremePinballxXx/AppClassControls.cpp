@@ -67,9 +67,9 @@ void App::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F4, NULL, m_pCameraMngr->SetCameraMode(CAMROTHOX));
 	ON_KEY_PRESS_RELEASE(F5, GameObject::CycleSelectedIndex(true), NULL);
 	ON_KEY_PRESS_RELEASE(F6, GameObject::CycleSelectedIndex(false), NULL);
-	ON_KEY_PRESS_RELEASE(F7, GameObject::ToggleSelectedDebugMode(AABB), NULL);
+	ON_KEY_PRESS_RELEASE(F7, GameObject::ToggleSelectedDebugMode(CT_AABB), NULL);
 	ON_KEY_PRESS_RELEASE(F8, GameObject::ToggleSelectedDebugMode(NAB), NULL);
-	ON_KEY_PRESS_RELEASE(F9, GameObject::ToggleDebugMode(AABB), NULL);
+	ON_KEY_PRESS_RELEASE(F9, GameObject::ToggleDebugMode(CT_AABB), NULL);
 	ON_KEY_PRESS_RELEASE(F10, GameObject::ToggleDebugMode(NAB), NULL);
 	static bool bFPSControll = false;
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));

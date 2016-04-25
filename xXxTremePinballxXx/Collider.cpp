@@ -157,7 +157,7 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		return false;
 
 	if (type != a_pOther->type) {
-		Collider* box = type == AABB ? this : a_pOther;
+		Collider* box = type == CT_AABB ? this : a_pOther;
 		Collider* circle = type == Circle ? this : a_pOther;
 
 		std::vector<vector3> boxPts = box->GetBoundingBox();
