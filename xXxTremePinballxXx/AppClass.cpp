@@ -38,7 +38,7 @@ void App::InitVariables(void)
 	//obj2->SetOrigin(vector3(0, 0.5f, 0));
 
 	flipper = new Flipper();
-	flipper->Translate(vector3(-3, 0, 0));
+	flipper->Translate(vector3(-2.5f, -4.5f, 0.75f));
 }
 
 void App::Update(void)

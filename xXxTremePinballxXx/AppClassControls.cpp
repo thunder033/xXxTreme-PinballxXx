@@ -1,5 +1,6 @@
 #include "AppClass.h"
 #include "GameObject.h"
+
 void App::ProcessKeyboard(void)
 {
 	bool bModifier = false;
