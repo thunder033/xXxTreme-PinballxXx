@@ -134,6 +134,11 @@ void Collider::calculateAABB()
 	alignedSize.z = max.z - min.z;
 }
 
+vector3 Collider::GetLastCollision()
+{
+	return lastCollision;
+}
+
 matrix4 Collider::GetAxisAlignedTransform()
 {
 	return glm::translate(GetCenter()) * glm::scale(alignedSize);
@@ -191,8 +196,11 @@ bool Collider::IsColliding(Collider* const a_pOther)
 			vector3 intersection = point - (dotProduct / edgeLength) * (edge / edgeLength);
 			float dist = glm::distance(intersection, circle->GetCenter());
 
-			if (dist < circle->GetRadius())
+			if (dist < circle->GetRadius()) {
+				lastCollision = intersection;
 				return true;
+			}
+				
 		}
 
 		return false;

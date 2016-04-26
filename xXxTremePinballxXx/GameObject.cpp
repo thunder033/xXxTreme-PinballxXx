@@ -116,8 +116,6 @@ void GameObject::Scale(vector3 scale)
 
 void GameObject::Update(double deltaTime)
 {
-	velocity += acceleration * static_cast<float>(deltaTime);
-	Translate(velocity * static_cast<float>(deltaTime));
 	hasFrameCollisions = false;
 
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
@@ -126,10 +124,20 @@ void GameObject::Update(double deltaTime)
 			continue;
 
 		bool colliding = (*it)->collider->IsColliding(this->collider);
+		if (colliding) {
+			OnCollision((*it)->collider->GetLastCollision(), (*it));
+		}
 		hasFrameCollisions = hasFrameCollisions || colliding;
 	}
 
-	acceleration = vector3(0.0f, 0.0f, 0.0f);	
+	velocity += acceleration * static_cast<float>(deltaTime);
+	Translate(velocity * static_cast<float>(deltaTime));
+	acceleration = vector3(0.0f, 0.0f, 0.0f);
+}
+
+void GameObject::OnCollision(vector3 collisionPoint, GameObject* collidee)
+{
+
 }
 
 void GameObject::Render(matrix4 projection, matrix4 view)

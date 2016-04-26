@@ -60,6 +60,8 @@ public:
 
 	virtual void Update(double);
 
+	virtual void OnCollision(vector3, GameObject*);
+
 	void Render(matrix4, matrix4);
 
 	void RenderAABBDebugHelpers();
