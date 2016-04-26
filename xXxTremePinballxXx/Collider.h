@@ -22,6 +22,7 @@ class Collider
 	vector3 max = vector3(0.0f); //Will store the maximum vector of the Sphere Class
 	vector3 size = vector3(0.0f);
 	vector3 alignedSize = vector3(0.0f);
+	vector3 lastCollision;
 	GOTransform* transform;
 	ColliderType type = AABB;
 
@@ -88,6 +89,7 @@ public:
 	std::vector<vector3> GetBoundingBox();
 	void setType(ColliderType);
 	void calculateAABB();
+	vector3 GetLastCollision();
 
 	/*
 	IsColliding
