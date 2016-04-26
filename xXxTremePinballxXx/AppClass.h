@@ -9,6 +9,7 @@ Date: 2015/09 (Last Modified on: 15/11)
 #include "TheBigScore.h"
 #include "PinballTable.h"
 #include "GameObject.h"
+#include "Ball.h"
 #include "Flipper.h"
 #include <SFML\Graphics.hpp>
 
@@ -19,7 +20,7 @@ class App : public ReEngAppClass
 private:
 	PinballTable* Table;
 
-	GameObject* obj2;
+	Ball* obj2;
 	Flipper* flipper;
 public:
 	typedef ReEngAppClass super;

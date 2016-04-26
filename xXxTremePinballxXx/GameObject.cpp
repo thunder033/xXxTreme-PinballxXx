@@ -128,6 +128,8 @@ void GameObject::Update(double deltaTime)
 		bool colliding = (*it)->collider->IsColliding(this->collider);
 		hasFrameCollisions = hasFrameCollisions || colliding;
 	}
+
+	acceleration = vector3(0.0f, 0.0f, 0.0f);	
 }
 
 void GameObject::Render(matrix4 projection, matrix4 view)
