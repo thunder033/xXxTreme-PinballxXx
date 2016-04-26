@@ -3,6 +3,8 @@
 
 #include "RE/ReEngAppClass.h"
 #include <glm/glm.hpp>
+#include <vector>
+#include "Wall.h"
 
 class PinballTable
 {
@@ -14,6 +16,8 @@ public:
 private:
 	PrimitiveClass WhiteCube;
 	PrimitiveClass GrayCube;
+
+	std::vector<Wall*> Walls;
 };
 
 #endif

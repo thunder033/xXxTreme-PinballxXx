@@ -190,7 +190,7 @@ void GameObject::RenderAll(matrix4 projection, matrix4 view)
 
 void GameObject::ToggleDebugMode(int colliderType)
 {
-	if (colliderType == AABB)
+	if (colliderType == CT_AABB)
 	{
 		for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 		{

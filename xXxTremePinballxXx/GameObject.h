@@ -1,8 +1,8 @@
 #include "RE\ReEngAppClass.h"
 #include "Collider.h"
 #include "GOTransform.h"
-#define AABB 0
-#define NAB 1
+#define CT_AABB 0
+#define CT_NAB 1
 
 #pragma once
 class GameObject

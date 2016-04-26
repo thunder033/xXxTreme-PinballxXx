@@ -38,7 +38,7 @@ void App::InitVariables(void)
 	//obj2->SetOrigin(vector3(0, 0.5f, 0));
 
 	flipper = new Flipper();
-	flipper->Translate(vector3(-3, 0, 0));
+	flipper->Translate(vector3(-2.5f, -4.5f, 0.75f));
 }
 
 void App::Update(void)
@@ -102,12 +102,11 @@ void App::Display(void)
 		break;
 	}
 
-	//Table->Render(m_pCameraMngr->GetProjectionMatrix(), m_pCameraMngr->GetViewMatrix());
 	matrix4 projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 view = m_pCameraMngr->GetViewMatrix();
 
 	GameObject::RenderAll(projection, view);
-	//Table->Render(projection, view);
+	Table->Render(projection, view);
 	
 	m_pMeshMngr->Render(); //renders the render list
 

@@ -8,7 +8,7 @@ Date: 2015/10
 #include "RE\ReEngAppClass.h"
 #include "GOTransform.h"
 
-enum ColliderType
+enum class ColliderType
 {
 	Circle = 0,
 	AABB
@@ -24,7 +24,7 @@ class Collider
 	vector3 alignedSize = vector3(0.0f);
 	vector3 lastCollision;
 	GOTransform* transform;
-	ColliderType type = AABB;
+	ColliderType type = ColliderType::AABB;
 
 	void GetMinMax(vector3& min, vector3& max, std::vector<vector3> points);
 public:
