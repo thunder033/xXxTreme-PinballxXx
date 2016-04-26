@@ -132,6 +132,7 @@ void GameObject::Update(double deltaTime)
 
 	velocity += acceleration * static_cast<float>(deltaTime);
 	Translate(velocity * static_cast<float>(deltaTime));
+	acceleration = vector3(0.0f, 0.0f, 0.0f);
 }
 
 void GameObject::OnCollision(vector3 collisionPoint, GameObject* collidee)

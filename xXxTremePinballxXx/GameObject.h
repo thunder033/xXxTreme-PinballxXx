@@ -7,8 +7,6 @@
 #pragma once
 class GameObject
 {
-	vector3 velocity;
-	vector3 acceleration;
 
 	float mass;
 	float elasictiy;
@@ -27,6 +25,8 @@ protected:
 	Collider* collider;
 	void Scale(vector3);
 	GOTransform* transform;
+	vector3 velocity;
+	vector3 acceleration;
 public:
 	GameObject();
 	GameObject(MeshClass*);

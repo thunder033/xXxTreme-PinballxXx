@@ -7,5 +7,7 @@ class Ball :
 public:
 	Ball();
 	~Ball();
+	void Update(double) override;
+	void Accelerate(vector3);
 };
 
