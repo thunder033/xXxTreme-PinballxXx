@@ -173,8 +173,10 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		for (int i = 0; i < 8; i++) {
 			//displacements.push_back(boxPts[i] - circle->GetCenter());
 			vector3 point = box->GetCenter() + boxPts[i];
-			if (glm::distance(point, circle->GetCenter()) < circle->GetRadius())
+			if (glm::distance(point, circle->GetCenter()) < circle->GetRadius()) {
+				lastCollision = point;
 				return true;
+			}
 		}
 
 		vector3 disp = circle->GetCenter() - (box->GetCenter() + boxPts[0]);
@@ -215,6 +217,7 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		vector3 v3Max = GetMax();
 		vector3 v3MaxO = a_pOther->GetMax();
 
+		lastCollision = GetCenter() + (a_pOther->GetCenter() - GetCenter()) / 2.0f;
 		return !(v3Min.x > v3MaxO.x || v3MinO.x > v3Max.x ||
 			v3Min.y > v3MaxO.y || v3MinO.y > v3Max.y ||
 			v3Min.z > v3MaxO.z || v3MinO.z > v3Max.z);
