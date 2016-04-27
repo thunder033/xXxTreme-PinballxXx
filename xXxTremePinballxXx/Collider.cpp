@@ -117,6 +117,16 @@ std::vector<vector3> Collider::GetBoundingBox()
 	return box;
 }
 
+OBB Collider::CreateOBB()
+{
+	OBB obb;
+
+	obb.c = transform->GetPosition() + centroid * transform->GetRotation();
+	obb.u = glm::mat3_cast(transform->GetRotation());
+	obb.e = size * transform->GetScale() / 2.f;
+	return obb;
+}
+
 void Collider::setType(ColliderType type)
 {
 	this->type = type;
@@ -161,6 +171,7 @@ bool Collider::IsColliding(Collider* const a_pOther)
 	if (dist > (GetRadius() + a_pOther->GetRadius()))
 		return false;
 
+	/*
 	if (type != a_pOther->type) {
 		Collider* box = type == ColliderType::AABB ? this : a_pOther;
 		Collider* circle = type == ColliderType::Circle ? this : a_pOther;
@@ -221,7 +232,95 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		return !(v3Min.x > v3MaxO.x || v3MinO.x > v3Max.x ||
 			v3Min.y > v3MaxO.y || v3MinO.y > v3Max.y ||
 			v3Min.z > v3MaxO.z || v3MinO.z > v3Max.z);
+	}*/
+
+	// SAT collision detection, from Morgan Kaufmann
+
+	OBB a = CreateOBB();
+	OBB b = a_pOther->CreateOBB();
+
+	float ra, rb;
+	matrix3 R, AbsR;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			R[i][j] = glm::dot(a.u[i], b.u[j]);
+		}
 	}
 
-	
+	vector3 t = b.c - a.c;
+	t = vector3(glm::dot(t, a.u[0]), glm::dot(t, a.u[1]), glm::dot(t, a.u[2]));
+
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			AbsR[i][j] = glm::abs(R[i][j]) + glm::epsilon<float>();
+		}
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		ra = a.e[i];
+		rb = b.e[0] * AbsR[i][0] + b.e[1] * AbsR[i][1] + b.e[2] * AbsR[i][2];
+		if (glm::abs(t[i]) > ra + rb)
+			return false;
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		ra = a.e[0] * AbsR[0][i] + a.e[1] * AbsR[1][i] + a.e[2] * AbsR[2][i];
+		rb = b.e[i];
+		if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > ra + rb)
+			return false;
+	}
+
+	ra = a.e[1] * AbsR[2][0] + a.e[2] * AbsR[1][0];
+	rb = b.e[1] * AbsR[0][2] + b.e[2] * AbsR[0][1];
+	if (glm::abs<float>(t[2] * R[1][0] - t[1] * R[2][0]) > ra + rb)
+		return false;
+
+	ra = a.e[1] * AbsR[2][1] + a.e[2] * AbsR[1][1];
+	rb = b.e[0] * AbsR[0][2] + b.e[2] * AbsR[0][0];
+	if (glm::abs<float>(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb)
+		return false;
+
+	ra = a.e[1] * AbsR[2][2] + a.e[2] * AbsR[1][2];
+	rb = b.e[0] * AbsR[0][1] + b.e[1] * AbsR[0][0];
+	if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb)
+		return false;
+
+	ra = a.e[0] * AbsR[2][0] + a.e[2] * AbsR[0][0];
+	rb = b.e[1] * AbsR[1][2] + b.e[2] * AbsR[1][1];
+	if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb)
+		return false;
+
+	ra = a.e[0] * AbsR[2][1] + a.e[2] * AbsR[0][1];
+	rb = b.e[0] * AbsR[1][2] + b.e[2] * AbsR[1][0];
+	if (glm::abs<float>(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb)
+		return false;
+
+	ra = a.e[0] * AbsR[2][2] + a.e[2] * AbsR[0][2];
+	rb = b.e[0] * AbsR[1][1] + b.e[1] * AbsR[1][0];
+	if (glm::abs<float>(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb)
+		return false;
+
+	ra = a.e[0] * AbsR[1][0] + a.e[1] * AbsR[0][0];
+	rb = b.e[1] * AbsR[2][2] + b.e[2] + AbsR[2][1];
+	if (glm::abs<float>(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb)
+		return false;
+
+	ra = a.e[0] * AbsR[1][1] + a.e[1] * AbsR[0][1];
+	rb = b.e[0] * AbsR[2][2] + b.e[2] * AbsR[2][0];
+	if (glm::abs<float>(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb)
+		return false;
+
+	ra = a.e[0] * AbsR[1][2] + a.e[1] * AbsR[0][2];
+	rb = b.e[0] * AbsR[2][1] + b.e[1] * AbsR[2][0];
+	if (glm::abs<float>(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb)
+		return false;
+
+	return true;
 }

@@ -8,6 +8,13 @@ Date: 2015/10
 #include "RE\ReEngAppClass.h"
 #include "GOTransform.h"
 
+struct OBB
+{
+	vector3 c;
+	matrix3 u;
+	vector3 e;
+};
+
 enum class ColliderType
 {
 	Circle = 0,
@@ -90,6 +97,8 @@ public:
 	void setType(ColliderType);
 	void calculateAABB();
 	vector3 GetLastCollision();
+
+	OBB CreateOBB();
 
 	/*
 	IsColliding
