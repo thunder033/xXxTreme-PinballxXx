@@ -121,7 +121,7 @@ OBB Collider::CreateOBB()
 {
 	OBB obb;
 
-	obb.c = transform->GetPosition() + centroid * transform->GetRotation();
+	obb.c = transform->GetPosition() - transform->GetRotation() * transform->GetOrigin();
 	obb.u = glm::mat3_cast(transform->GetRotation());
 	obb.e = size * transform->GetScale() / 2.f;
 	return obb;
