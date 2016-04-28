@@ -24,7 +24,7 @@ void App::InitVariables(void)
 		vector3(0.0f, -0.75f, 0.0f),//What Im looking at
 		REAXISY);//What is up
 
-	//Table = new PinballTable();
+	Table = new PinballTable();
 
 	//GameObject* obj = new GameObject();
 	//obj->Rotate(quaternion(vector3(45, 45, 45)));
@@ -106,7 +106,7 @@ void App::Display(void)
 	matrix4 view = m_pCameraMngr->GetViewMatrix();
 
 	GameObject::RenderAll(projection, view);
-	//Table->Render(projection, view);
+	Table->Render(projection, view);
 	
 	m_pMeshMngr->Render(); //renders the render list
 
