@@ -225,97 +225,57 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		return false;
 	}
 	//If they are both circles, we have already checked their radii
-	else if (type == ColliderType::Circle && false) {
+	else if (type == ColliderType::Circle) {
 		return true;
 	}
 	else {
 
-		//Begin Mind Fuckery
-		OBB a = obb;
-		OBB b = a_pOther->obb;
+		vector3 r1 = obb.r;
+		vector3 s1 = obb.s;
+		vector3 t1 = obb.t;
 
-		float ra, rb;
-		matrix3 R, AbsR;
+		OBB obb2 = a_pOther->obb;
+		vector3 r2 = obb2.r;
+		vector3 s2 = obb2.s;
+		vector3 t2 = obb2.t;
 
-		for (int i = 0; i < 3; ++i)
-		{
-			for (int j = 0; j < 3; ++j)
-			{
-				R[i][j] = glm::dot(a.u[i], b.u[j]);
+		vector3 axes[] = {
+			//Normals of OBB1
+			glm::cross(r1, s1),
+			glm::cross(r1, t1),
+			glm::cross(s1, t1),
+			//Normals of OBB2
+			glm::cross(r2, s2),
+			glm::cross(r2, t2),
+			glm::cross(s2, t2),
+			//Normals between OBB1 & 2
+			glm::cross(r1, r2),
+			glm::cross(r1, s2),
+			glm::cross(r1, t2),
+			glm::cross(s1, r2),
+			glm::cross(s1, s2),
+			glm::cross(s1, t2),
+			glm::cross(t1, r2),
+			glm::cross(t1, s2),
+			glm::cross(t1, t2),
+		};
+
+		for (int i = 0; i < 15; i++) {
+			if (glm::length(axes[i]) == 0)
+				continue;
+
+			Projection proj1 = Projection(obb.GetWorldVerts(), axes[i]); 
+			Projection proj2 = Projection(a_pOther->obb.GetWorldVerts(), axes[i]);
+
+			lastCollision = (obb.c + a_pOther->obb.c) / 2.0f;
+			if (!proj1.Overlaps(proj2)) {
+
+				MeshManagerSingleton* renderer = MeshManagerSingleton::GetInstance();
+				renderer->AddPlaneToQueue(glm::translate(lastCollision) * glm::scale(vector3(5)) * glm::rotate(90.0f, axes[i])), REYELLOW);
+
+				return false;
 			}
 		}
-
-		vector3 t = b.c - a.c;
-		t = vector3(glm::dot(t, a.u[0]), glm::dot(t, a.u[1]), glm::dot(t, a.u[2]));
-
-		for (int i = 0; i < 3; ++i)
-		{
-			for (int j = 0; j < 3; ++j)
-			{
-				AbsR[i][j] = glm::abs(R[i][j]) + glm::epsilon<float>();
-			}
-		}
-
-		for (int i = 0; i < 3; ++i)
-		{
-			ra = a.e[i];
-			rb = b.e[0] * AbsR[i][0] + b.e[1] * AbsR[i][1] + b.e[2] * AbsR[i][2];
-			if (glm::abs(t[i]) > ra + rb)
-				return false;
-		}
-
-		for (int i = 0; i < 3; ++i)
-		{
-			ra = a.e[0] * AbsR[0][i] + a.e[1] * AbsR[1][i] + a.e[2] * AbsR[2][i];
-			rb = b.e[i];
-			if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > ra + rb)
-				return false;
-		}
-
-		ra = a.e[1] * AbsR[2][0] + a.e[2] * AbsR[1][0];
-		rb = b.e[1] * AbsR[0][2] + b.e[2] * AbsR[0][1];
-		if (glm::abs<float>(t[2] * R[1][0] - t[1] * R[2][0]) > ra + rb)
-			return false;
-
-		ra = a.e[1] * AbsR[2][1] + a.e[2] * AbsR[1][1];
-		rb = b.e[0] * AbsR[0][2] + b.e[2] * AbsR[0][0];
-		if (glm::abs<float>(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb)
-			return false;
-
-		ra = a.e[1] * AbsR[2][2] + a.e[2] * AbsR[1][2];
-		rb = b.e[0] * AbsR[0][1] + b.e[1] * AbsR[0][0];
-		if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb)
-			return false;
-
-		ra = a.e[0] * AbsR[2][0] + a.e[2] * AbsR[0][0];
-		rb = b.e[1] * AbsR[1][2] + b.e[2] * AbsR[1][1];
-		if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb)
-			return false;
-
-		ra = a.e[0] * AbsR[2][1] + a.e[2] * AbsR[0][1];
-		rb = b.e[0] * AbsR[1][2] + b.e[2] * AbsR[1][0];
-		if (glm::abs<float>(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb)
-			return false;
-
-		ra = a.e[0] * AbsR[2][2] + a.e[2] * AbsR[0][2];
-		rb = b.e[0] * AbsR[1][1] + b.e[1] * AbsR[1][0];
-		if (glm::abs<float>(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb)
-			return false;
-
-		ra = a.e[0] * AbsR[1][0] + a.e[1] * AbsR[0][0];
-		rb = b.e[1] * AbsR[2][2] + b.e[2] + AbsR[2][1];
-		if (glm::abs<float>(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb)
-			return false;
-
-		ra = a.e[0] * AbsR[1][1] + a.e[1] * AbsR[0][1];
-		rb = b.e[0] * AbsR[2][2] + b.e[2] * AbsR[2][0];
-		if (glm::abs<float>(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb)
-			return false;
-
-		ra = a.e[0] * AbsR[1][2] + a.e[1] * AbsR[0][2];
-		rb = b.e[0] * AbsR[2][1] + b.e[1] * AbsR[2][0];
-		if (glm::abs<float>(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb)
-			return false;
 
 		return true;
 	}
