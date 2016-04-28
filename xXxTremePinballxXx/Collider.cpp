@@ -269,9 +269,17 @@ bool Collider::IsColliding(Collider* const a_pOther)
 
 			lastCollision = (obb.c + a_pOther->obb.c) / 2.0f;
 			if (!proj1.Overlaps(proj2)) {
-
 				MeshManagerSingleton* renderer = MeshManagerSingleton::GetInstance();
-				renderer->AddPlaneToQueue(glm::translate(lastCollision) * glm::scale(vector3(5)) * glm::rotate(90.0f, axes[i])), REYELLOW);
+
+				//assume axis is greatest along x
+				vector3 rotAxis = rotAxis = vector3(0, 1, 0);;
+				float degrees = 90;
+				if (glm::abs(axes[i].y) >= glm::abs(axes[i].x) && glm::abs(axes[i].y) >= glm::abs(axes[i].z))
+					rotAxis = vector3(1, 0, 0);
+				else if (glm::abs(axes[i].z) >= glm::abs(axes[i].x) && glm::abs(axes[i].z) >= glm::abs(axes[i].y))
+					degrees = 0;
+
+				renderer->AddPlaneToQueue(glm::translate(lastCollision) * glm::rotate(degrees, rotAxis) * glm::scale(vector3(3)) , REYELLOW);
 
 				return false;
 			}

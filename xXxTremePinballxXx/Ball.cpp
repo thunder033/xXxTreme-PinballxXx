@@ -14,7 +14,7 @@ Ball::~Ball()
 
 void Ball::Update(double DeltaTime)
 {
-	Accelerate(vector3(0.0f, -6.0f, 0.0f));
+	//Accelerate(vector3(0.0f, -6.0f, 0.0f));
 	GameObject::Update(DeltaTime);
 	transform->SetPosition(vector3(transform->GetPosition().x, transform->GetPosition().y, 1.0f));
 }
