@@ -12,8 +12,8 @@ Date: 2015/10
 
 enum class ColliderType
 {
-	Circle = 0,
-	AABB
+	Sphere = 0,
+	OBB
 };
 //System Class
 class Collider
@@ -27,7 +27,7 @@ class Collider
 	vector3 lastCollision;
 	GOTransform* transform;
 	OBB obb;
-	ColliderType type = ColliderType::AABB;
+	ColliderType type = ColliderType::OBB;
 
 	void GetMinMax(vector3& min, vector3& max, std::vector<vector3> points);
 public:

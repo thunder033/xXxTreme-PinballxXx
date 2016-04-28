@@ -96,6 +96,10 @@ float Collider::GetRadius(void) { return radius; }
 
 std::vector<vector3> Collider::CalculateOBB()
 {
+	
+	if (type == ColliderType::Sphere)
+		return std::vector<vector3>();
+
 	float fValue = 0.5f;
 	//3--2
 	//|  |
@@ -137,19 +141,24 @@ OBB Collider::UpdateOBB()
 void Collider::setType(ColliderType type)
 {
 	this->type = type;
-	if (type == ColliderType::Circle) {
+	if (type == ColliderType::Sphere) {
 		radius = 1;
 	}
 }
 
 void Collider::calculateAABB()
 {	
-	CalculateOBB();
+	if (type == ColliderType::Sphere) {
+		alignedSize = vector3(1) * transform->GetScale();
+	}
+	else {
+		CalculateOBB();
 
-	GetMinMax(min, max, obb.verts);
-	alignedSize.x = max.x - min.x;
-	alignedSize.y = max.y - min.y;
-	alignedSize.z = max.z - min.z;
+		GetMinMax(min, max, obb.verts);
+		alignedSize.x = max.x - min.x;
+		alignedSize.y = max.y - min.y;
+		alignedSize.z = max.z - min.z;
+	}
 }
 
 vector3 Collider::GetLastCollision()
@@ -179,53 +188,38 @@ bool Collider::IsColliding(Collider* const a_pOther)
 	if (dist > (GetRadius() + a_pOther->GetRadius()))
 		return false;
 
-	if (type != a_pOther->type && false) {
-		Collider* box = type == ColliderType::AABB ? this : a_pOther;
-		Collider* circle = type == ColliderType::Circle ? this : a_pOther;
+	if (type != a_pOther->type) {
+		Collider* box = type == ColliderType::OBB ? this : a_pOther;
+		Collider* sphere = type == ColliderType::Sphere ? this : a_pOther;
 
-		std::vector<vector3> boxPts = box->CalculateOBB();
-		std::sort(boxPts.begin(), boxPts.end(), [circle, box](vector3 a, vector3 b) -> bool {
-			return glm::distance(box->GetCenter() + a, circle->GetCenter()) < glm::distance(box->GetCenter() + b, circle->GetCenter());
-		});
-		//std::vector<vector3> displacements = {};
-		for (int i = 0; i < 8; i++) {
-			//displacements.push_back(boxPts[i] - circle->GetCenter());
-			vector3 point = box->GetCenter() + boxPts[i];
-			if (glm::distance(point, circle->GetCenter()) < circle->GetRadius()) {
-				lastCollision = point;
-				return true;
-			}
-		}
+		vector3 r1 = box->obb.r;
+		vector3 s1 = box->obb.s;
+		vector3 t1 = box->obb.t;
 
-		vector3 disp = circle->GetCenter() - (box->GetCenter() + boxPts[0]);
-		for (int i = 1; i < 8; i++) {
-			//if (boxPts[i].x != boxPts[0].x && boxPts[i].y != boxPts[0].y && boxPts[i].z != boxPts[0].z)
-			//	continue;
+		vector3 axes[] = {
+			//Normals of OBB1
+			glm::cross(r1, s1),
+			glm::cross(r1, t1),
+			glm::cross(s1, t1)
+		};
 
-			vector3 edge = boxPts[i] - boxPts[0];
-			vector3 center = box->GetCenter();
-			vector3 point = box->GetCenter() + boxPts[i];
-
-			//project the displacement from the closest point to the sphere onto the edge
-			float dotProduct = glm::dot(disp, edge);
-			if (dotProduct < 0)
+		for (int i = 0; i < 3; i++) {
+			if (glm::length(axes[i]) == 0)
 				continue;
 
-			float edgeLength = glm::length(edge);
-			vector3 intersection = point - (dotProduct / edgeLength) * (edge / edgeLength);
-			float dist = glm::distance(intersection, circle->GetCenter());
+			Projection proj1 = Projection(box->obb.GetWorldVerts(), axes[i]);
+			Projection proj2 = Projection(a_pOther->obb.GetWorldVerts(), axes[i]);
 
-			if (dist < circle->GetRadius()) {
-				lastCollision = intersection;
-				return true;
+			lastCollision = (obb.c + a_pOther->obb.c) / 2.0f;
+			if (!proj1.Overlaps(proj2)) {
+				return false;
 			}
-				
 		}
 
 		return false;
 	}
 	//If they are both circles, we have already checked their radii
-	else if (type == ColliderType::Circle) {
+	else if (type == ColliderType::Sphere) {
 		return true;
 	}
 	else {

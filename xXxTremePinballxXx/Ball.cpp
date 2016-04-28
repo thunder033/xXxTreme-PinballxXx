@@ -4,7 +4,7 @@
 
 Ball::Ball() : GameObject((mesh = new PrimitiveClass(), mesh->GenerateSphere(0.2, 12, REWHITE), mesh))
 {
-	collider->setType(ColliderType::Circle);
+	collider->setType(ColliderType::Sphere);
 }
 
 
