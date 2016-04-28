@@ -66,6 +66,8 @@ Collider::Collider(std::vector<vector3> a_lVectorList, GOTransform* transform)
 	size.y = max.y - min.y;
 	size.z = max.z - min.z;
 	alignedSize = size;
+
+	CalculateOBB();
 }
 Collider::Collider(Collider const& other)
 {
@@ -92,7 +94,7 @@ Collider::~Collider() { Release(); };
 vector3 Collider::GetCenter(void) { return vector3(transform->GetMatrix() * vector4(centroid, 1.0f)); }
 float Collider::GetRadius(void) { return radius; }
 
-std::vector<vector3> Collider::GetBoundingBox()
+std::vector<vector3> Collider::CalculateOBB()
 {
 	float fValue = 0.5f;
 	//3--2
@@ -114,16 +116,21 @@ std::vector<vector3> Collider::GetBoundingBox()
 		box[i] = vector3(ToMatrix4(transform->GetRotation()) * glm::translate(centroid) * glm::scale(size) * glm::scale(transform->GetScale()) * vector4(box[i], 1));
 	}
 
+	obb.verts = box;
+
+	obb.r = obb.verts[1] - obb.verts[0];
+	obb.s = obb.verts[3] - obb.verts[0];
+	obb.t = obb.verts[0] - obb.verts[4];
+
 	return box;
 }
 
-OBB Collider::CreateOBB()
+OBB Collider::UpdateOBB()
 {
-	OBB obb;
-
 	obb.c = transform->GetPosition() - transform->GetRotation() * transform->GetOrigin();
 	obb.u = glm::mat3_cast(transform->GetRotation());
 	obb.e = size * transform->GetScale() / 2.f;
+
 	return obb;
 }
 
@@ -136,9 +143,10 @@ void Collider::setType(ColliderType type)
 }
 
 void Collider::calculateAABB()
-{
-	std::vector<vector3> box = GetBoundingBox();
-	GetMinMax(min, max, box);
+{	
+	CalculateOBB();
+
+	GetMinMax(min, max, obb.verts);
 	alignedSize.x = max.x - min.x;
 	alignedSize.y = max.y - min.y;
 	alignedSize.z = max.z - min.z;
@@ -171,12 +179,11 @@ bool Collider::IsColliding(Collider* const a_pOther)
 	if (dist > (GetRadius() + a_pOther->GetRadius()))
 		return false;
 
-	/*
-	if (type != a_pOther->type) {
+	if (type != a_pOther->type && false) {
 		Collider* box = type == ColliderType::AABB ? this : a_pOther;
 		Collider* circle = type == ColliderType::Circle ? this : a_pOther;
 
-		std::vector<vector3> boxPts = box->GetBoundingBox();
+		std::vector<vector3> boxPts = box->CalculateOBB();
 		std::sort(boxPts.begin(), boxPts.end(), [circle, box](vector3 a, vector3 b) -> bool {
 			return glm::distance(box->GetCenter() + a, circle->GetCenter()) < glm::distance(box->GetCenter() + b, circle->GetCenter());
 		});
@@ -191,7 +198,6 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		}
 
 		vector3 disp = circle->GetCenter() - (box->GetCenter() + boxPts[0]);
-		vector3 disp2 = circle->GetCenter() - (box->GetCenter() + boxPts[7]);
 		for (int i = 1; i < 8; i++) {
 			//if (boxPts[i].x != boxPts[0].x && boxPts[i].y != boxPts[0].y && boxPts[i].z != boxPts[0].z)
 			//	continue;
@@ -218,109 +224,101 @@ bool Collider::IsColliding(Collider* const a_pOther)
 
 		return false;
 	}
-	else if (type == ColliderType::Circle) {
-		return false;
+	//If they are both circles, we have already checked their radii
+	else if (type == ColliderType::Circle && false) {
+		return true;
 	}
 	else {
-		vector3 v3Min = GetMin();
-		vector3 v3MinO = a_pOther->GetMin();
 
-		vector3 v3Max = GetMax();
-		vector3 v3MaxO = a_pOther->GetMax();
+		//Begin Mind Fuckery
+		OBB a = obb;
+		OBB b = a_pOther->obb;
 
-		lastCollision = GetCenter() + (a_pOther->GetCenter() - GetCenter()) / 2.0f;
-		return !(v3Min.x > v3MaxO.x || v3MinO.x > v3Max.x ||
-			v3Min.y > v3MaxO.y || v3MinO.y > v3Max.y ||
-			v3Min.z > v3MaxO.z || v3MinO.z > v3Max.z);
-	}*/
+		float ra, rb;
+		matrix3 R, AbsR;
 
-	// SAT collision detection, from Morgan Kaufmann
-
-	OBB a = CreateOBB();
-	OBB b = a_pOther->CreateOBB();
-
-	float ra, rb;
-	matrix3 R, AbsR;
-
-	for (int i = 0; i < 3; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
+		for (int i = 0; i < 3; ++i)
 		{
-			R[i][j] = glm::dot(a.u[i], b.u[j]);
+			for (int j = 0; j < 3; ++j)
+			{
+				R[i][j] = glm::dot(a.u[i], b.u[j]);
+			}
 		}
-	}
 
-	vector3 t = b.c - a.c;
-	t = vector3(glm::dot(t, a.u[0]), glm::dot(t, a.u[1]), glm::dot(t, a.u[2]));
+		vector3 t = b.c - a.c;
+		t = vector3(glm::dot(t, a.u[0]), glm::dot(t, a.u[1]), glm::dot(t, a.u[2]));
 
-	for (int i = 0; i < 3; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
+		for (int i = 0; i < 3; ++i)
 		{
-			AbsR[i][j] = glm::abs(R[i][j]) + glm::epsilon<float>();
+			for (int j = 0; j < 3; ++j)
+			{
+				AbsR[i][j] = glm::abs(R[i][j]) + glm::epsilon<float>();
+			}
 		}
-	}
 
-	for (int i = 0; i < 3; ++i)
-	{
-		ra = a.e[i];
-		rb = b.e[0] * AbsR[i][0] + b.e[1] * AbsR[i][1] + b.e[2] * AbsR[i][2];
-		if (glm::abs(t[i]) > ra + rb)
+		for (int i = 0; i < 3; ++i)
+		{
+			ra = a.e[i];
+			rb = b.e[0] * AbsR[i][0] + b.e[1] * AbsR[i][1] + b.e[2] * AbsR[i][2];
+			if (glm::abs(t[i]) > ra + rb)
+				return false;
+		}
+
+		for (int i = 0; i < 3; ++i)
+		{
+			ra = a.e[0] * AbsR[0][i] + a.e[1] * AbsR[1][i] + a.e[2] * AbsR[2][i];
+			rb = b.e[i];
+			if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > ra + rb)
+				return false;
+		}
+
+		ra = a.e[1] * AbsR[2][0] + a.e[2] * AbsR[1][0];
+		rb = b.e[1] * AbsR[0][2] + b.e[2] * AbsR[0][1];
+		if (glm::abs<float>(t[2] * R[1][0] - t[1] * R[2][0]) > ra + rb)
 			return false;
-	}
 
-	for (int i = 0; i < 3; ++i)
-	{
-		ra = a.e[0] * AbsR[0][i] + a.e[1] * AbsR[1][i] + a.e[2] * AbsR[2][i];
-		rb = b.e[i];
-		if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > ra + rb)
+		ra = a.e[1] * AbsR[2][1] + a.e[2] * AbsR[1][1];
+		rb = b.e[0] * AbsR[0][2] + b.e[2] * AbsR[0][0];
+		if (glm::abs<float>(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb)
 			return false;
+
+		ra = a.e[1] * AbsR[2][2] + a.e[2] * AbsR[1][2];
+		rb = b.e[0] * AbsR[0][1] + b.e[1] * AbsR[0][0];
+		if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb)
+			return false;
+
+		ra = a.e[0] * AbsR[2][0] + a.e[2] * AbsR[0][0];
+		rb = b.e[1] * AbsR[1][2] + b.e[2] * AbsR[1][1];
+		if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb)
+			return false;
+
+		ra = a.e[0] * AbsR[2][1] + a.e[2] * AbsR[0][1];
+		rb = b.e[0] * AbsR[1][2] + b.e[2] * AbsR[1][0];
+		if (glm::abs<float>(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb)
+			return false;
+
+		ra = a.e[0] * AbsR[2][2] + a.e[2] * AbsR[0][2];
+		rb = b.e[0] * AbsR[1][1] + b.e[1] * AbsR[1][0];
+		if (glm::abs<float>(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb)
+			return false;
+
+		ra = a.e[0] * AbsR[1][0] + a.e[1] * AbsR[0][0];
+		rb = b.e[1] * AbsR[2][2] + b.e[2] + AbsR[2][1];
+		if (glm::abs<float>(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb)
+			return false;
+
+		ra = a.e[0] * AbsR[1][1] + a.e[1] * AbsR[0][1];
+		rb = b.e[0] * AbsR[2][2] + b.e[2] * AbsR[2][0];
+		if (glm::abs<float>(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb)
+			return false;
+
+		ra = a.e[0] * AbsR[1][2] + a.e[1] * AbsR[0][2];
+		rb = b.e[0] * AbsR[2][1] + b.e[1] * AbsR[2][0];
+		if (glm::abs<float>(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb)
+			return false;
+
+		return true;
 	}
 
-	ra = a.e[1] * AbsR[2][0] + a.e[2] * AbsR[1][0];
-	rb = b.e[1] * AbsR[0][2] + b.e[2] * AbsR[0][1];
-	if (glm::abs<float>(t[2] * R[1][0] - t[1] * R[2][0]) > ra + rb)
-		return false;
-
-	ra = a.e[1] * AbsR[2][1] + a.e[2] * AbsR[1][1];
-	rb = b.e[0] * AbsR[0][2] + b.e[2] * AbsR[0][0];
-	if (glm::abs<float>(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb)
-		return false;
-
-	ra = a.e[1] * AbsR[2][2] + a.e[2] * AbsR[1][2];
-	rb = b.e[0] * AbsR[0][1] + b.e[1] * AbsR[0][0];
-	if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb)
-		return false;
-
-	ra = a.e[0] * AbsR[2][0] + a.e[2] * AbsR[0][0];
-	rb = b.e[1] * AbsR[1][2] + b.e[2] * AbsR[1][1];
-	if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb)
-		return false;
-
-	ra = a.e[0] * AbsR[2][1] + a.e[2] * AbsR[0][1];
-	rb = b.e[0] * AbsR[1][2] + b.e[2] * AbsR[1][0];
-	if (glm::abs<float>(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb)
-		return false;
-
-	ra = a.e[0] * AbsR[2][2] + a.e[2] * AbsR[0][2];
-	rb = b.e[0] * AbsR[1][1] + b.e[1] * AbsR[1][0];
-	if (glm::abs<float>(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb)
-		return false;
-
-	ra = a.e[0] * AbsR[1][0] + a.e[1] * AbsR[0][0];
-	rb = b.e[1] * AbsR[2][2] + b.e[2] + AbsR[2][1];
-	if (glm::abs<float>(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb)
-		return false;
-
-	ra = a.e[0] * AbsR[1][1] + a.e[1] * AbsR[0][1];
-	rb = b.e[0] * AbsR[2][2] + b.e[2] * AbsR[2][0];
-	if (glm::abs<float>(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb)
-		return false;
-
-	ra = a.e[0] * AbsR[1][2] + a.e[1] * AbsR[0][2];
-	rb = b.e[0] * AbsR[2][1] + b.e[1] * AbsR[2][0];
-	if (glm::abs<float>(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb)
-		return false;
-
-	return true;
+	
 }
