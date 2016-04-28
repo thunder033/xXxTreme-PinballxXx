@@ -95,8 +95,6 @@ public:
 	vector3 GetLastCollision();
 	OBB UpdateOBB();
 
-	OBB CreateOBB();
-
 	/*
 	IsColliding
 	USAGE: Asks if there is a collision with another Bounding sphere Object
