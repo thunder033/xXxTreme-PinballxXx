@@ -196,7 +196,6 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		Collider* sphere = type == ColliderType::Sphere ? this : a_pOther;
 
 		vector3 axes[] = {
-			//Normals of OBB1
 			box->obb.r,
 			box->obb.s,
 			box->obb.t
@@ -219,7 +218,6 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		}
 
 		vector3 normal = closestPt - sphere->GetCenter();
-		MeshManagerSingleton::GetInstance()->AddSphereToQueue(glm::translate(closestPt) * glm::scale(vector3(.1f)), REGREEN, SOLID);
 		return glm::dot(normal, normal) <= sphere->GetRadius() * sphere->GetRadius();
 	}
 	//If they are both circles, we have already checked their radii
