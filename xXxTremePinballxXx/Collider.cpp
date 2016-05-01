@@ -92,7 +92,10 @@ Collider& Collider::operator=(Collider const& other)
 Collider::~Collider() { Release(); };
 //Accessors
 vector3 Collider::GetCenter(void) { return vector3(transform->GetMatrix() * vector4(centroid, 1.0f)); }
-float Collider::GetRadius(void) { return radius; }
+float Collider::GetRadius(void) { 
+	vector3 scale = transform->GetScale();
+	return radius * std::max(std::max(scale.x, scale.y), scale.z);
+}
 
 std::vector<vector3> Collider::CalculateOBB()
 {
@@ -142,7 +145,7 @@ void Collider::setType(ColliderType type)
 {
 	this->type = type;
 	if (type == ColliderType::Sphere) {
-		radius = 1;
+		radius = std::max(std::max(size.x, size.y), size.z) / 2.0f;
 	}
 }
 
@@ -192,31 +195,32 @@ bool Collider::IsColliding(Collider* const a_pOther)
 		Collider* box = type == ColliderType::OBB ? this : a_pOther;
 		Collider* sphere = type == ColliderType::Sphere ? this : a_pOther;
 
-		vector3 r1 = box->obb.r;
-		vector3 s1 = box->obb.s;
-		vector3 t1 = box->obb.t;
-
 		vector3 axes[] = {
 			//Normals of OBB1
-			glm::cross(r1, s1),
-			glm::cross(r1, t1),
-			glm::cross(s1, t1)
+			box->obb.r,
+			box->obb.s,
+			box->obb.t
 		};
 
+		vector3 closestPt = box->obb.c;
+		vector3 disp = sphere->GetCenter() - box->obb.c;
+
 		for (int i = 0; i < 3; i++) {
-			if (glm::length(axes[i]) == 0)
-				continue;
+			float dist = glm::dot(disp, glm::normalize(axes[i]));
 
-			Projection proj1 = Projection(box->obb.GetWorldVerts(), axes[i]);
-			Projection proj2 = Projection(a_pOther->obb.GetWorldVerts(), axes[i]);
+			float extent = glm::length(axes[i]) / 2.0f;
+			if (dist > extent)
+				dist = extent;
 
-			lastCollision = (obb.c + a_pOther->obb.c) / 2.0f;
-			if (!proj1.Overlaps(proj2)) {
-				return false;
-			}
+			if (dist < -extent)
+				dist = -extent;
+
+			closestPt += dist * glm::normalize(axes[i]);	
 		}
 
-		return false;
+		vector3 normal = closestPt - sphere->GetCenter();
+		MeshManagerSingleton::GetInstance()->AddSphereToQueue(glm::translate(closestPt) * glm::scale(vector3(.1f)), REGREEN, SOLID);
+		return glm::dot(normal, normal) <= sphere->GetRadius() * sphere->GetRadius();
 	}
 	//If they are both circles, we have already checked their radii
 	else if (type == ColliderType::Sphere) {
