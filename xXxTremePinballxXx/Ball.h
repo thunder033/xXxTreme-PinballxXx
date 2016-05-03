@@ -7,7 +7,9 @@ class Ball :
 public:
 	Ball();
 	~Ball();
-	void Update(double) override;
+	virtual void Update(double) override;
 	void Accelerate(vector3);
+	virtual void OnCollision(vector3, GameObject*) override;
+	virtual ObjectType GetType() override;
 };
 

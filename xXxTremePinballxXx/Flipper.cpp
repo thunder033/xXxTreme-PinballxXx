@@ -44,3 +44,8 @@ void Flipper::Flip() {
 		flipPct = 0;
 	}
 }
+
+ObjectType Flipper::GetType()
+{
+	return ObjectType::Flipper;
+}

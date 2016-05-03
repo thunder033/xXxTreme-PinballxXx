@@ -1,10 +1,20 @@
+#ifndef _GAMEOBJECT_H_
+#define _GAMEOBJECT_H_
+
 #include "RE\ReEngAppClass.h"
 #include "Collider.h"
 #include "GOTransform.h"
 #define CT_AABB 0
 #define CT_NAB 1
 
-#pragma once
+enum class ObjectType
+{
+	Default,
+	Flipper,
+	Ball
+};
+
+
 class GameObject
 {
 
@@ -31,6 +41,8 @@ public:
 	GameObject();
 	GameObject(MeshClass*);
 	virtual ~GameObject();
+
+	virtual ObjectType GetType();
 
 	/*
 	Sets the origin of the game object, which indicates how 
@@ -86,3 +98,4 @@ public:
 	static int GetGameObjectCount();
 };
 
+#endif

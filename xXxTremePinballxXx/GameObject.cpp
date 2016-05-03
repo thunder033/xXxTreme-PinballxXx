@@ -49,6 +49,11 @@ GameObject::~GameObject()
 	}
 }
 
+ObjectType GameObject::GetType()
+{
+	return ObjectType::Default;
+}
+
 void GameObject::SetOrigin(vector3 origin)
 {
 	transform->SetOrigin(origin);

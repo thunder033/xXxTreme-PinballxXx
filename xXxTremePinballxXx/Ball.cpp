@@ -1,4 +1,5 @@
 #include "Ball.h"
+#include "Flipper.h"
 
 
 
@@ -22,4 +23,17 @@ void Ball::Update(double DeltaTime)
 void Ball::Accelerate(vector3 force)
 {
 	GameObject::acceleration += force;
+}
+
+void Ball::OnCollision(vector3 collisionPoint, GameObject* collidee)
+{
+	if (collidee->GetType() == ObjectType::Flipper)
+	{
+		auto temp = reinterpret_cast<Flipper*>(collidee);
+	}
+}
+
+ObjectType Ball::GetType()
+{
+	return ObjectType::Ball;
 }

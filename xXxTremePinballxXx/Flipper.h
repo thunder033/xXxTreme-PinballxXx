@@ -16,5 +16,7 @@ public:
 	void Update(double);
 
 	void Flip();
+
+	virtual ObjectType GetType() override;
 };
 
