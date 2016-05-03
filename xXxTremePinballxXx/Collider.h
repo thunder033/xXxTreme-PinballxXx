@@ -9,6 +9,7 @@ Date: 2015/10
 #include "OBB.hpp"
 #include "GOTransform.h"
 #include "Projection.hpp"
+#include "Collision.hpp"
 
 enum class ColliderType
 {
@@ -102,7 +103,7 @@ public:
 	Collider* const a_pOther -> Other object to check collision with
 	OUTPUT: bool -> check of the collision
 	*/
-	bool IsColliding(Collider* const a_pOther);
+	Collision* IsColliding(Collider* const a_pOther);
 
 private:
 	/*

@@ -3,7 +3,9 @@
 
 #include "RE\ReEngAppClass.h"
 #include "Collider.h"
+#include "Collision.hpp"
 #include "GOTransform.h"
+#include <unordered_map>
 #define CT_AABB 0
 #define CT_NAB 1
 
@@ -37,6 +39,7 @@ protected:
 	GOTransform* transform;
 	vector3 velocity;
 	vector3 acceleration;
+	std::unordered_map<GameObject*, Collision*> frameCollisions;
 public:
 	GameObject();
 	GameObject(MeshClass*);

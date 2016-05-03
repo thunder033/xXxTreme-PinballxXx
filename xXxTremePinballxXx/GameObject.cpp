@@ -19,6 +19,7 @@ GameObject::GameObject(MeshClass * mesh)
 	acceleration = vector3(0);
 
 	hasFrameCollisions = false;
+	frameCollisions = {};
 	debugColor = REGREEN;
 
 	GameObject::instances.push_back(this);
@@ -131,6 +132,7 @@ void GameObject::Scale(vector3 scale)
 
 void GameObject::Update(double deltaTime)
 {
+	frameCollisions.clear();
 	hasFrameCollisions = false;
 
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
@@ -138,11 +140,13 @@ void GameObject::Update(double deltaTime)
 		if (*it == this)
 			continue;
 
-		bool colliding = (*it)->collider->IsColliding(this->collider);
-		if (colliding) {
+		Collision* collision = (*it)->collider->IsColliding(this->collider);
+		//frameCollisions.insert(it, collision);
+
+		if (collision->colliding) {
 			OnCollision((*it)->collider->GetLastCollision(), (*it));
 		}
-		hasFrameCollisions = hasFrameCollisions || colliding;
+		hasFrameCollisions = hasFrameCollisions || collision->colliding;
 	}
 
 	velocity += acceleration * static_cast<float>(deltaTime);

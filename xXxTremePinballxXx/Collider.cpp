@@ -185,11 +185,15 @@ vector3 Collider::GetMax() {
 }
 
 //--- Non Standard Singleton Methods
-bool Collider::IsColliding(Collider* const a_pOther)
+Collision* Collider::IsColliding(Collider* const a_pOther)
 {
+	Collision* collision = new Collision();
+	collision->colliding = false;
+
 	float dist = glm::distance(GetCenter(), a_pOther->GetCenter());
-	if (dist > (GetRadius() + a_pOther->GetRadius()))
-		return false;
+	if (dist > (GetRadius() + a_pOther->GetRadius())) {
+		return collision;
+	}
 
 	if (type != a_pOther->type) {
 		Collider* box = type == ColliderType::OBB ? this : a_pOther;
@@ -217,12 +221,20 @@ bool Collider::IsColliding(Collider* const a_pOther)
 			closestPt += dist * glm::normalize(axes[i]);	
 		}
 
-		vector3 normal = closestPt - sphere->GetCenter();
-		return glm::dot(normal, normal) <= sphere->GetRadius() * sphere->GetRadius();
+		vector3 penetration = closestPt - sphere->GetCenter();
+
+		collision->intersectPoint1 = closestPt;
+		collision->penetrationVector = penetration;
+		vector3 toSphereEdge = glm::normalize(penetration) * sphere->GetRadius();
+		collision->intersectPoint2 = sphere->GetCenter() + toSphereEdge;
+
+		collision->colliding = glm::dot(penetration, penetration) <= sphere->GetRadius() * sphere->GetRadius();
+		return collision;
 	}
 	//If they are both circles, we have already checked their radii
 	else if (type == ColliderType::Sphere) {
-		return true;
+		collision->colliding = true;
+		return collision;
 	}
 	else {
 
@@ -265,11 +277,12 @@ bool Collider::IsColliding(Collider* const a_pOther)
 
 			lastCollision = (obb.c + a_pOther->obb.c) / 2.0f;
 			if (!proj1.Overlaps(proj2)) {
-				return false;
+				return collision;
 			}
 		}
 
-		return true;
+		collision->colliding = true;
+		return collision;
 	}
 
 	

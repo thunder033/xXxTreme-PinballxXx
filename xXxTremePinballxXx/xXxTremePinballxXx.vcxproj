@@ -173,6 +173,7 @@ xcopy "$(SolutionDir)include\RE\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
     <ClInclude Include="AppClass.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="Collision.hpp" />
     <ClInclude Include="Flipper.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GOTransform.h" />
