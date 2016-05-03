@@ -18,5 +18,7 @@ public:
 	void Flip();
 
 	virtual ObjectType GetType() override;
+
+	virtual void OnCollision(vector3, GameObject*) override;
 };
 

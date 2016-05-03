@@ -59,22 +59,32 @@ void GameObject::SetOrigin(vector3 origin)
 	transform->SetOrigin(origin);
 }
 
-vector3 GameObject::GetOrigin()
+vector3 GameObject::GetOrigin() const
 {
 	return transform->GetOrigin();
 }
 
-vector3 GameObject::GetPosition()
+const vector3& GameObject::GetPosition() const
 {
 	return transform->GetPosition();
 }
 
-quaternion GameObject::GetRotation()
+const vector3& GameObject::GetVelocity() const
+{
+	return this->velocity;
+}
+
+void GameObject::SetVelocity(const vector3& newVelocity)
+{
+	this->velocity = newVelocity;
+}
+
+const quaternion& GameObject::GetRotation() const
 {
 	return transform->GetRotation();
 }
 
-GOTransform* GameObject::GetTransform()
+GOTransform* GameObject::GetTransform() const
 {
 	return transform;
 }

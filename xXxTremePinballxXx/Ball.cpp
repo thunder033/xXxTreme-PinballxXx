@@ -15,22 +15,18 @@ Ball::~Ball()
 
 void Ball::Update(double DeltaTime)
 {
-	//Accelerate(vector3(0.0f, -6.0f, 0.0f));
+	Accelerate(vector3(0.0f, -6.0f, 0.0f));
 	GameObject::Update(DeltaTime);
 	transform->SetPosition(vector3(transform->GetPosition().x, transform->GetPosition().y, 1.0f));
 }
 
 void Ball::Accelerate(vector3 force)
 {
-	GameObject::acceleration += force;
+	acceleration += force;
 }
 
 void Ball::OnCollision(vector3 collisionPoint, GameObject* collidee)
 {
-	if (collidee->GetType() == ObjectType::Flipper)
-	{
-		auto temp = reinterpret_cast<Flipper*>(collidee);
-	}
 }
 
 ObjectType Ball::GetType()

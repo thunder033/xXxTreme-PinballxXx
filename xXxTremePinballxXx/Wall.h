@@ -9,6 +9,9 @@ class Wall : public GameObject
 
 public:
 	Wall();
+
+	virtual void OnCollision(vector3, GameObject*) override;
 };
+
 
 #endif

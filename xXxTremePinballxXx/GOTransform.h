@@ -14,7 +14,7 @@ public:
 	GOTransform();
 	~GOTransform();
 
-	matrix4 GetMatrix();
+	const matrix4& GetMatrix() const;
 
 	/*
 	Sets the origin of the game object, which indicates how
@@ -22,13 +22,13 @@ public:
 	*/
 	void SetOrigin(vector3);
 
-	vector3 GetOrigin();
+	vector3 GetOrigin() const;
 
-	vector3 GetPosition();
+	const vector3& GetPosition() const;
 
-	vector3 GetScale();
+	const vector3& GetScale() const;
 
-	quaternion GetRotation();
+	const quaternion& GetRotation() const;
 
 	void SetPosition(vector3);
 

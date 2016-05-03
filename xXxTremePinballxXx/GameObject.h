@@ -50,19 +50,23 @@ public:
 	*/
 	void SetOrigin(vector3);
 
-	inline vector3 GetOrigin();
+	const vector3& GetVelocity() const;
 
-	inline vector3 GetPosition();
+	void SetVelocity(const vector3& newVelocity);
 
-	inline quaternion GetRotation();
+	vector3 GetOrigin() const;
 
-	GOTransform* GetTransform();
+	const vector3& GetPosition() const;
+
+	const quaternion& GetRotation() const;
+
+	GOTransform* GetTransform() const;
 
 	void SetDebugColor(vector3 newColor);
 
 	void Rotate(quaternion);
 
-	inline void Translate(vector3);
+	void Translate(vector3);
 
 	void Scale(float);
 

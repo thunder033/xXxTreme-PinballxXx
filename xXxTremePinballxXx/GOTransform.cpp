@@ -28,22 +28,22 @@ void GOTransform::SetOrigin(vector3 origin)
 	calculateMatrix();
 }
 
-vector3 GOTransform::GetOrigin()
+vector3 GOTransform::GetOrigin() const
 {
 	return vector3(origin.x * scale.x, origin.y * scale.y, origin.z * scale.z);
 }
 
-vector3 GOTransform::GetPosition()
+const vector3& GOTransform::GetPosition() const
 {
 	return position;
 }
 
-vector3 GOTransform::GetScale()
+const vector3& GOTransform::GetScale() const
 {
 	return scale;
 }
 
-quaternion GOTransform::GetRotation()
+const quaternion& GOTransform::GetRotation() const
 {
 	return orientation;
 }
@@ -60,7 +60,7 @@ void GOTransform::SetScale(vector3 scale)
 	calculateMatrix();
 }
 
-matrix4 GOTransform::GetMatrix()
+const matrix4& GOTransform::GetMatrix() const
 {
 	return matrix;
 }
