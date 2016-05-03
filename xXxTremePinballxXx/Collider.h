@@ -6,12 +6,14 @@ Date: 2015/10
 #define __Collider_H_
 
 #include "RE\ReEngAppClass.h"
+#include "OBB.hpp"
 #include "GOTransform.h"
+#include "Projection.hpp"
 
 enum class ColliderType
 {
-	Circle = 0,
-	AABB
+	Sphere = 0,
+	OBB
 };
 //System Class
 class Collider
@@ -24,7 +26,8 @@ class Collider
 	vector3 alignedSize = vector3(0.0f);
 	vector3 lastCollision;
 	GOTransform* transform;
-	ColliderType type = ColliderType::AABB;
+	OBB obb;
+	ColliderType type = ColliderType::OBB;
 
 	void GetMinMax(vector3& min, vector3& max, std::vector<vector3> points);
 public:
@@ -86,10 +89,11 @@ public:
 	matrix4 GetAxisAlignedTransform(void);
 	vector3 GetMin();
 	vector3 GetMax();
-	std::vector<vector3> GetBoundingBox();
+	std::vector<vector3> CalculateOBB();
 	void setType(ColliderType);
 	void calculateAABB();
 	vector3 GetLastCollision();
+	OBB UpdateOBB();
 
 	/*
 	IsColliding

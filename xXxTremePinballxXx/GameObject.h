@@ -80,6 +80,11 @@ public:
 
 	void RenderNABDebugHelpers();
 
+	inline Collider* GetCollider()
+	{
+		return collider;
+	}
+
 	//Static GameObject Methods
 	//a.k.a BoundingObjectManager
 	static void Init();

@@ -4,7 +4,7 @@
 void App::ProcessKeyboard(void)
 {
 	bool bModifier = false;
-	float fSpeed = 10.0f;
+	float fSpeed = 0.01f;
 
 #pragma region ON_KEY_PRESS_RELEASE
 	static bool	bLastF1 = false, bLastF2 = false, bLastF3 = false, bLastF4 = false, bLastF5 = false,
@@ -45,16 +45,16 @@ void App::ProcessKeyboard(void)
 		m_pCameraMngr->MoveVertical(fSpeed);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		obj2->Accelerate(vector3(-fSpeed, 0, 0));
+		obj2->Translate(vector3(-fSpeed, 0, 0));
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		obj2->Accelerate(vector3(fSpeed, 0, 0));
+		obj2->Translate(vector3(fSpeed, 0, 0));
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		obj2->Accelerate(vector3(0, fSpeed, 0));
+		obj2->Translate(vector3(0, fSpeed, 0));
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		obj2->Accelerate(vector3(0, -fSpeed, 0));
+		obj2->Translate(vector3(0, -fSpeed, 0));
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		flipper->Flip();

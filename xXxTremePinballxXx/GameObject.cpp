@@ -138,11 +138,13 @@ void GameObject::Update(double deltaTime)
 	velocity += acceleration * static_cast<float>(deltaTime);
 	Translate(velocity * static_cast<float>(deltaTime));
 	acceleration = vector3(0.0f, 0.0f, 0.0f);
+
+	collider->UpdateOBB();
 }
 
 void GameObject::OnCollision(vector3 collisionPoint, GameObject* collidee)
 {
-
+	renderer->AddSphereToQueue(glm::translate(collisionPoint) * glm::scale(vector3(.1f)), REYELLOW, SOLID);
 }
 
 void GameObject::Render(matrix4 projection, matrix4 view)
