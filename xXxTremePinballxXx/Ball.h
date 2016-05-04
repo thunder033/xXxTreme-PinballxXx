@@ -1,7 +1,7 @@
 #pragma once
-#include "GameObject.h"
+#include "Entity.h"
 class Ball :
-	public GameObject
+	public Entity
 {
 	PrimitiveClass* mesh;
 public:

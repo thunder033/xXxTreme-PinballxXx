@@ -3,12 +3,12 @@
 class Entity :
 	public GameObject
 {
+	vector3 lastPosition;
+protected:
 	vector3 velocity;
 	vector3 acceleration;
-protected:
-	std::unordered_map<int, Collision*> frameCollisions;
-	void AddFrameCollision(int, Collision*);
 public:
+	Entity(MeshClass*);
 	Entity();
 	virtual ~Entity();
 
@@ -16,6 +16,8 @@ public:
 
 	void SetVelocity(const vector3& newVelocity);
 
-	virtual void OnCollision(const CollisionEvent);
+	virtual void PhysicsUpdate(double deltaTime);
+
+	virtual void Update(double deltaTime) override;
 };
 
