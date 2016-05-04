@@ -7,16 +7,16 @@ Wall::Wall() : GameObject((mesh = new PrimitiveClass(), mesh->GenerateCube(1.f, 
 	collider->setType(ColliderType::OBB);
 }
 
-void Wall::OnCollision(vector3 collisionPoint, GameObject *collidee)
+void Wall::OnCollision(CollisionEvent collision)
 {
-	switch (collidee->GetType())
+	switch (collision.collidee->GetType())
 	{
 	case ObjectType::Ball:
 	{
 		quaternion orientation = this->transform->GetRotation();
 		vector3 normal = vector3(0.0f, 1.0f, 0.0f) * orientation;
-		vector3 newBallVelocity = glm::reflect(collidee->GetVelocity(), normal);
-		collidee->SetVelocity(newBallVelocity);
+		vector3 newBallVelocity = glm::reflect(collision.collidee->GetVelocity(), normal);
+		collision.collidee->SetVelocity(newBallVelocity);
 		break;
 	}
 	default:

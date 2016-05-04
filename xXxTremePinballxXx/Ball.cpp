@@ -25,7 +25,7 @@ void Ball::Accelerate(vector3 force)
 	acceleration += force;
 }
 
-void Ball::OnCollision(vector3 collisionPoint, GameObject* collidee)
+void Ball::OnCollision(CollisionEvent collision)
 {
 }
 

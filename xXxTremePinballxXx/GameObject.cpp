@@ -3,6 +3,8 @@
 std::vector<GameObject*> GameObject::instances;
 MeshManagerSingleton* GameObject::renderer;
 int GameObject::selectedInstanceIndex;
+int GameObject::curID = 0;
+int GameObject::checkCount = 0;
 
 GameObject::GameObject() : GameObject(new PrimitiveClass())
 {
@@ -10,7 +12,7 @@ GameObject::GameObject() : GameObject(new PrimitiveClass())
 	collider = new Collider(mesh->GetVertexList(), transform);
 }
 
-GameObject::GameObject(MeshClass * mesh)
+GameObject::GameObject(MeshClass * mesh) : id(curID++)
 {
 	this->mesh = mesh;
 	transform = new GOTransform();
@@ -53,6 +55,11 @@ GameObject::~GameObject()
 ObjectType GameObject::GetType()
 {
 	return ObjectType::Default;
+}
+
+const int GameObject::GetID()
+{
+	return id;
 }
 
 void GameObject::SetOrigin(vector3 origin)
@@ -130,24 +137,36 @@ void GameObject::Scale(vector3 scale)
 	collider->calculateAABB();
 }
 
+void GameObject::AddFrameCollision(int objID, Collision * collision)
+{
+	hasFrameCollisions = hasFrameCollisions || collision->colliding;
+	frameCollisions.insert({ { objID, collision } });
+}
+
 void GameObject::Update(double deltaTime)
 {
-	frameCollisions.clear();
+	
 	hasFrameCollisions = false;
-
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
-		if (*it == this)
+		if (*it == this || frameCollisions.find((*it)->GetID()) != frameCollisions.end())
 			continue;
 
+		checkCount++;
 		Collision* collision = (*it)->collider->IsColliding(this->collider);
-		//frameCollisions.insert(it, collision);
+		collision->collider1 = *it;
+		collision->collider2 = this;
+
+		AddFrameCollision((*it)->GetID(), collision);
+		(*it)->AddFrameCollision(id, collision);
 
 		if (collision->colliding) {
-			OnCollision((*it)->collider->GetLastCollision(), (*it));
+			OnCollision(collision->GetEvent(this));
+			(*it)->OnCollision(collision->GetEvent(*it));
 		}
-		hasFrameCollisions = hasFrameCollisions || collision->colliding;
 	}
+
+	frameCollisions.clear();
 
 	velocity += acceleration * static_cast<float>(deltaTime);
 	Translate(velocity * static_cast<float>(deltaTime));
@@ -156,9 +175,9 @@ void GameObject::Update(double deltaTime)
 	collider->UpdateOBB();
 }
 
-void GameObject::OnCollision(vector3 collisionPoint, GameObject* collidee)
+void GameObject::OnCollision(const CollisionEvent collision)
 {
-	renderer->AddSphereToQueue(glm::translate(collisionPoint) * glm::scale(vector3(.1f)), REYELLOW, SOLID);
+	renderer->AddSphereToQueue(glm::translate(collision.collidee->GetPosition() + collision.collideeIntersectPt) * glm::scale(vector3(.1f)), REYELLOW, SOLID);
 }
 
 void GameObject::Render(matrix4 projection, matrix4 view)
@@ -190,6 +209,7 @@ void GameObject::Init()
 
 void GameObject::UpdateAll(double deltaTime)
 {
+	checkCount = 0;
 	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
 	{
 		(*it)->Update(deltaTime);
@@ -265,5 +285,10 @@ void GameObject::ToggleSelectedDebugMode(int colliderType)
 int GameObject::GetGameObjectCount()
 {
 	return instances.size();
+}
+
+int GameObject::GetCheckCount()
+{
+	return checkCount;
 }
 

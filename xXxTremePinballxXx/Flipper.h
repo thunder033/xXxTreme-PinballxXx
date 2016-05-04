@@ -19,6 +19,6 @@ public:
 
 	virtual ObjectType GetType() override;
 
-	virtual void OnCollision(vector3, GameObject*) override;
+	virtual void OnCollision(const CollisionEvent) override;
 };
 

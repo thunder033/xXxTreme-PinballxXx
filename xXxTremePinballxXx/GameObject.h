@@ -19,7 +19,7 @@ enum class ObjectType
 
 class GameObject
 {
-
+	const int id;
 	float mass;
 	float elasictiy;
 
@@ -33,13 +33,16 @@ class GameObject
 	static std::vector<GameObject*> instances;
 	static int selectedInstanceIndex;
 	static MeshManagerSingleton* renderer;
+	static int curID;
+	static int checkCount;
 protected:
 	Collider* collider;
 	void Scale(vector3);
 	GOTransform* transform;
 	vector3 velocity;
 	vector3 acceleration;
-	std::unordered_map<GameObject*, Collision*> frameCollisions;
+	std::unordered_map<int, Collision*> frameCollisions;
+	void AddFrameCollision(int, Collision*);
 public:
 	GameObject();
 	GameObject(MeshClass*);
@@ -51,6 +54,8 @@ public:
 	Sets the origin of the game object, which indicates how 
 	far from the center rotations and scales will be performed
 	*/
+	const int GetID();
+
 	void SetOrigin(vector3);
 
 	const vector3& GetVelocity() const;
@@ -79,7 +84,7 @@ public:
 
 	virtual void Update(double);
 
-	virtual void OnCollision(vector3, GameObject*);
+	virtual void OnCollision(const CollisionEvent);
 
 	void Render(matrix4, matrix4);
 
@@ -108,6 +113,8 @@ public:
 	static void ToggleSelectedDebugMode(int);
 
 	static int GetGameObjectCount();
+
+	static int GetCheckCount();
 };
 
 #endif

@@ -74,10 +74,13 @@ void App::Update(void)
 	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
 
 	m_pMeshMngr->Print("Number of Game Objects: ");
-	m_pMeshMngr->PrintLine(std::to_string(GameObject::GetGameObjectCount()), REYELLOW);
+	m_pMeshMngr->PrintLine(std::to_string(GameObject::GetGameObjectCount()), REGREEN);
 	
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
+
+	m_pMeshMngr->Print("Number of Checks: ");
+	m_pMeshMngr->PrintLine(std::to_string(GameObject::GetCheckCount()), REGREEN);
 }
 
 void App::Display(void)

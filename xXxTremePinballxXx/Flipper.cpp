@@ -51,9 +51,9 @@ ObjectType Flipper::GetType()
 	return ObjectType::Flipper;
 }
 
-void Flipper::OnCollision(vector3 collisionPoint, GameObject* collidee)
+void Flipper::OnCollision(CollisionEvent collision)
 {
-	switch (collidee->GetType())
+	switch (collision.collidee->GetType())
 	{
 	case ObjectType::Ball:
 	{
@@ -62,11 +62,11 @@ void Flipper::OnCollision(vector3 collisionPoint, GameObject* collidee)
 		double flipperMagnitude = 0.0;
 		if (flipping)
 		{
-			flipperMagnitude = ((flipRotation.z - flipStart.z) * flipSpeed) * (glm::distance(collisionPoint, (GetPosition() + GetOrigin()))) / 3.f;
+			flipperMagnitude = ((flipRotation.z - flipStart.z) * flipSpeed) * (glm::distance(collision.intersectPt, (GetPosition() + GetOrigin()))) / 3.f;
 		}		
-		double newVelocityPercent = flipperMagnitude / glm::length(collidee->GetVelocity());
-		vector3 newBallVelocity = glm::reflect(collidee->GetVelocity(), normal) *  (1.0f + (float)newVelocityPercent);
-		collidee->SetVelocity(newBallVelocity);
+		double newVelocityPercent = flipperMagnitude / glm::length(collision.collidee->GetVelocity());
+		vector3 newBallVelocity = glm::reflect(collision.collidee->GetVelocity(), normal) *  (1.0f + (float)newVelocityPercent);
+		//collision.collidee->SetVelocity(newBallVelocity);
 		break;
 	}
 	default:

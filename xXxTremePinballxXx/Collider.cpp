@@ -222,13 +222,21 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 		}
 
 		vector3 penetration = closestPt - sphere->GetCenter();
-
-		collision->intersectPoint1 = closestPt;
-		collision->penetrationVector = penetration;
-		vector3 toSphereEdge = glm::normalize(penetration) * sphere->GetRadius();
-		collision->intersectPoint2 = sphere->GetCenter() + toSphereEdge;
-
 		collision->colliding = glm::dot(penetration, penetration) <= sphere->GetRadius() * sphere->GetRadius();
+
+		if (collision->colliding) {
+			collision->penetrationVector = type == ColliderType::OBB ? penetration : -penetration;
+
+			vector3 toSphereEdge = vector3(0);
+			if (glm::length(penetration) != 0) 
+				toSphereEdge = glm::normalize(penetration) * sphere->GetRadius();
+
+			vector3 sphereEdgePt = sphere->GetCenter() + toSphereEdge;
+			vector3 obbEdgePt = closestPt;
+			collision->intersectPoint1 = type == ColliderType::OBB ? obbEdgePt : sphereEdgePt;
+			collision->intersectPoint2 = type == ColliderType::OBB ? sphereEdgePt : obbEdgePt;
+		}
+		
 		return collision;
 	}
 	//If they are both circles, we have already checked their radii
