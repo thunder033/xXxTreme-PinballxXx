@@ -253,3 +253,8 @@ int GameObject::GetCheckCount()
 	return checkCount;
 }
 
+const std::vector<GameObject*>& GameObject::GetInstances()
+{
+	return instances;
+}
+

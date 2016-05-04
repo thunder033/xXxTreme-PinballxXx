@@ -112,6 +112,8 @@ public:
 	static int GetGameObjectCount();
 
 	static int GetCheckCount();
+
+	static const std::vector<GameObject*>& GetInstances();
 };
 
 #endif
