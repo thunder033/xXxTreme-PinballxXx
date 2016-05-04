@@ -1,21 +1,48 @@
 #include "Entity.h"
 
 
+void Entity::SetMass(float mass)
+{
+	this->mass = mass;
+}
+
+void Entity::SetElascity(float elascity)
+{
+	this->elasictiy = elascity;
+}
+
 Entity::Entity(MeshClass* mesh) : GameObject(mesh)
 {
+	velocity = vector3(0);
+	acceleration = vector3(0);
 
+	mass = 1;
+	elasictiy = 1;
 }
 
 Entity::Entity() : GameObject()
 {
 	velocity = vector3(0);
 	acceleration = vector3(0);
+
+	mass = 1;
+	elasictiy = 1;
 }
 
 
 Entity::~Entity()
 {
 
+}
+
+const float Entity::GetMass() const
+{
+	return mass;
+}
+
+const float Entity::GetElascity() const
+{
+	return elasictiy;
 }
 
 const vector3& Entity::GetVelocity() const
@@ -62,6 +89,6 @@ void Entity::PhysicsUpdate(double deltaTime)
 
 void Entity::Update(double deltaTime)
 {
-	GameObject::Update(deltaTime);
 	PhysicsUpdate(deltaTime);
+	GameObject::Update(deltaTime);
 }

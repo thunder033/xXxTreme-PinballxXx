@@ -220,16 +220,21 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 
 		//MeshManagerSingleton::GetInstance()->AddSphereToQueue(glm::translate(closestPt) * glm::scale(vector3(0.1f)), REYELLOW, SOLID);
 
-		vector3 penetration = closestPt - sphere->GetCenter();
-		bool colliding = glm::dot(penetration, penetration) <= sphere->GetRadius() * sphere->GetRadius();
+		vector3 toSphereCenter = closestPt - sphere->GetCenter();
+		bool colliding = glm::dot(toSphereCenter, toSphereCenter) <= sphere->GetRadius() * sphere->GetRadius();
 
 		if (colliding) {
 			Collision* collision = new Collision();
 			collision->colliding = true;
+
+			vector3 penetration = vector3(0);
+			if(glm::length2(toSphereCenter) > 0)
+				penetration = (sphere->GetRadius() - glm::distance(closestPt, sphere->GetCenter())) * glm::normalize(toSphereCenter);
+
 			collision->penetrationVector = type == ColliderType::OBB ? penetration : -penetration;
 
 			vector3 toSphereEdge = vector3(0);
-			if (glm::length(penetration) != 0) 
+			if (glm::length2(penetration) > 0)
 				toSphereEdge = glm::normalize(penetration) * sphere->GetRadius();
 
 			vector3 sphereEdgePt = sphere->GetCenter() + toSphereEdge;

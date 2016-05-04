@@ -21,8 +21,6 @@ class GameObject
 {
 	const int id;
 	MeshClass* mesh;
-	float mass;
-	float elasictiy;
 
 	vector3 debugColor;
 	bool debugAABBMode;

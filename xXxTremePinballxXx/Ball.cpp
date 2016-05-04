@@ -6,6 +6,7 @@
 Ball::Ball() : Entity((mesh = new PrimitiveClass(), mesh->GenerateSphere(0.2, 12, REWHITE), mesh))
 {
 	collider->setType(ColliderType::Sphere);
+	SetElascity(.65f);
 }
 
 
