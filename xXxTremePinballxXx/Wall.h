@@ -8,7 +8,7 @@ class Wall : public GameObject
 	PrimitiveClass* mesh;
 
 public:
-	Wall();
+	Wall(vector3);
 
 	virtual void OnCollision(const CollisionEvent) override;
 };
