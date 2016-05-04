@@ -139,7 +139,7 @@ void GameObject::Scale(vector3 scale)
 
 void GameObject::AddFrameCollision(int objID, Collision * collision)
 {
-	hasFrameCollisions = hasFrameCollisions || collision->colliding;
+	hasFrameCollisions = hasFrameCollisions || (collision != nullptr && collision->colliding);
 	frameCollisions.insert({ { objID, collision } });
 }
 
@@ -154,13 +154,16 @@ void GameObject::Update(double deltaTime)
 
 		checkCount++;
 		Collision* collision = (*it)->collider->IsColliding(this->collider);
-		collision->collider1 = *it;
-		collision->collider2 = this;
 
+		if (collision != nullptr) {
+			collision->collider1 = *it;
+			collision->collider2 = this;
+		}
+		
 		AddFrameCollision((*it)->GetID(), collision);
 		(*it)->AddFrameCollision(id, collision);
 
-		if (collision->colliding) {
+		if (collision != nullptr && collision->colliding) {
 			OnCollision(collision->GetEvent(this));
 			(*it)->OnCollision(collision->GetEvent(*it));
 		}

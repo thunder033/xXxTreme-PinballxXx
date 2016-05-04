@@ -187,12 +187,9 @@ vector3 Collider::GetMax() {
 //--- Non Standard Singleton Methods
 Collision* Collider::IsColliding(Collider* const a_pOther)
 {
-	Collision* collision = new Collision();
-	collision->colliding = false;
-
 	float dist = glm::distance(GetCenter(), a_pOther->GetCenter());
 	if (dist > (GetRadius() + a_pOther->GetRadius())) {
-		return collision;
+		return nullptr;
 	}
 
 	if (type != a_pOther->type) {
@@ -222,9 +219,11 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 		}
 
 		vector3 penetration = closestPt - sphere->GetCenter();
-		collision->colliding = glm::dot(penetration, penetration) <= sphere->GetRadius() * sphere->GetRadius();
+		bool colliding = glm::dot(penetration, penetration) <= sphere->GetRadius() * sphere->GetRadius();
 
-		if (collision->colliding) {
+		if (colliding) {
+			Collision* collision = new Collision();
+			collision->colliding = true;
 			collision->penetrationVector = type == ColliderType::OBB ? penetration : -penetration;
 
 			vector3 toSphereEdge = vector3(0);
@@ -235,12 +234,14 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 			vector3 obbEdgePt = closestPt;
 			collision->intersectPoint1 = type == ColliderType::OBB ? obbEdgePt : sphereEdgePt;
 			collision->intersectPoint2 = type == ColliderType::OBB ? sphereEdgePt : obbEdgePt;
+			return collision;
 		}
 		
-		return collision;
+		return nullptr;
 	}
 	//If they are both circles, we have already checked their radii
 	else if (type == ColliderType::Sphere) {
+		Collision* collision = new Collision();
 		collision->colliding = true;
 		return collision;
 	}
@@ -285,10 +286,12 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 
 			lastCollision = (obb.c + a_pOther->obb.c) / 2.0f;
 			if (!proj1.Overlaps(proj2)) {
-				return collision;
+				return nullptr;
 			}
 		}
 
+		Collision* collision = new Collision();
+		//TODO: SAT penetration vector
 		collision->colliding = true;
 		return collision;
 	}
