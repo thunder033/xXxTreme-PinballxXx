@@ -39,6 +39,9 @@ void App::InitVariables(void)
 
 	flipper = new Flipper();
 	flipper->Translate(vector3(-2.5f, -4.5f, 0.75f));
+
+	physicsTickTime = 1 / 30; // target is 30FPS
+	timeSinceLastPhysicsUpdate = 0.0;
 }
 
 void App::Update(void)
@@ -61,7 +64,16 @@ void App::Update(void)
 
 	obj2->RotateTo(m_qArcBall);
 
-	GameObject::UpdateAll(m_pSystem->LapClock());
+	double deltaTime = m_pSystem->LapClock();
+
+	timeSinceLastPhysicsUpdate += deltaTime;
+	while (timeSinceLastPhysicsUpdate >= physicsTickTime)
+	{
+		timeSinceLastPhysicsUpdate -= physicsTickTime;
+		// Do Something
+	}
+
+	GameObject::UpdateAll(deltaTime);
 	
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
