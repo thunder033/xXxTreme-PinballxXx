@@ -218,6 +218,8 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 			closestPt += dist * glm::normalize(axes[i]);	
 		}
 
+		//MeshManagerSingleton::GetInstance()->AddSphereToQueue(glm::translate(closestPt) * glm::scale(vector3(0.1f)), REYELLOW, SOLID);
+
 		vector3 penetration = closestPt - sphere->GetCenter();
 		bool colliding = glm::dot(penetration, penetration) <= sphere->GetRadius() * sphere->GetRadius();
 

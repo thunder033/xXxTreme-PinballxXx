@@ -22,6 +22,8 @@ class GameObject
 	const int id;
 	float mass;
 	float elasictiy;
+	
+	vector3 lastPosition;
 
 	MeshClass* mesh;
 
