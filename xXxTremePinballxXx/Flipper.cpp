@@ -58,8 +58,9 @@ void Flipper::OnCollision(CollisionEvent collision)
 	case ObjectType::Ball:
 	{
 		Entity* ball = dynamic_cast<Entity*>(collision.collidee);
-		quaternion orientation = this->transform->GetRotation();
-		vector3 normal = vector3(0.0f, 1.0f, 0.0f) * orientation;
+		vector3 disp = ball->GetPosition() - collision.collideeIntersectPt;
+		vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
+		
 		double flipperMagnitude = 0.0;
 		if (flipping)
 		{
@@ -67,7 +68,10 @@ void Flipper::OnCollision(CollisionEvent collision)
 		}		
 		double newVelocityPercent = flipperMagnitude / glm::length(ball->GetVelocity());
 		vector3 newBallVelocity = glm::reflect(ball->GetVelocity(), normal) *  (1.0f + (float)newVelocityPercent);
-		//ball->SetVelocity(newBallVelocity);
+		
+		ball->SetVelocity(newBallVelocity * ball->GetElascity());
+		ball->Translate(-collision.penetrationVector);
+
 		break;
 	}
 	default:
