@@ -70,7 +70,7 @@ void App::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F8, GameObject::ToggleSelectedDebugMode(CT_NAB), NULL);
 	ON_KEY_PRESS_RELEASE(F9, GameObject::ToggleDebugMode(CT_AABB), NULL);
 	ON_KEY_PRESS_RELEASE(F10, GameObject::ToggleDebugMode(CT_NAB), NULL);
-	ON_KEY_PRESS_RELEASE(Space, flipper->Flip(), NULL);
+	ON_KEY_PRESS_RELEASE(Space, flipper->Flip(), flipper->Unflip());
 	static bool bFPSControll = false;
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));
 #pragma endregion

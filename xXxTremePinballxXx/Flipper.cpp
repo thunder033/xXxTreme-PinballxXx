@@ -6,12 +6,13 @@
 Flipper::Flipper() : Entity((mesh = new PrimitiveClass(), mesh->GenerateCube(1, RERED), mesh))
 {
 	SetOrigin(vector3(-0.5f, 0, 0));
-	Scale(vector3(2, .5f, .5f));
+	Scale(vector3(1.5f, .4f, .4f));
+	RotateTo(vector3(0.f, 0.f, -.2f));
 
-	flipRotation = vector3(0, 0, PI / 2.0f);
+	flipRotation = vector3(0, 0, PI / 3.0f);
 	flipStart = transform->GetRotation();
 	flipPct = 0;
-	flipSpeed = 5.0f;
+	flipSpeed = 7.5f;
 	flipping = false;
 }
 
@@ -25,7 +26,7 @@ void Flipper::Update(double deltaTime)
 	if (flipping) {
 		flipPct += flipSpeed * deltaTime;
 		if (flipPct >= 1.0f)
-			flipping = false;
+			flipPct = 1.0f;
 	}
 	else if(flipPct > 0) {
 		flipPct -= flipSpeed * deltaTime;
@@ -46,6 +47,11 @@ void Flipper::Flip() {
 	}
 }
 
+void Flipper::Unflip()
+{
+	flipping = false;
+}
+
 ObjectType Flipper::GetType()
 {
 	return ObjectType::Flipper;
@@ -64,10 +70,14 @@ void Flipper::OnCollision(CollisionEvent collision)
 		double flipperMagnitude = 0.0;
 		if (flipping)
 		{
-			flipperMagnitude = ((flipRotation.z - flipStart.z) * flipSpeed) * (glm::distance(collision.intersectPt, (GetPosition() + GetOrigin()))) / 3.f;
+			float edgePos = glm::dot(collision.collideeIntersectPt - transform->GetPosition(), collider->GetOBB().r);
+			float length = (transform->GetScale().x - transform->GetOrigin().x);
+			float relEdge = (edgePos + transform->GetOrigin().x);
+			flipperMagnitude = relEdge / length;
+			//flipperMagnitude = ((flipRotation.z - flipStart.z) * flipSpeed) * (glm::distance(collision.intersectPt, (GetPosition() + GetOrigin()))) / 3.f;
 		}		
-		double newVelocityPercent = flipperMagnitude / glm::length(ball->GetVelocity());
-		vector3 newBallVelocity = glm::reflect(ball->GetVelocity(), normal) *  (1.0f + (float)newVelocityPercent);
+		double velocityImpulse = flipperMagnitude * flipSpeed * 3.75f;
+		vector3 newBallVelocity = glm::reflect(ball->GetVelocity(), normal) + ((float)velocityImpulse * normal);
 		
 		ball->SetVelocity(newBallVelocity * ball->GetElascity());
 		ball->Translate(-collision.penetrationVector);

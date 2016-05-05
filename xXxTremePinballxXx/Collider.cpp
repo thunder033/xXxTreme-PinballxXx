@@ -141,6 +141,11 @@ OBB Collider::UpdateOBB()
 	return obb;
 }
 
+const OBB Collider::GetOBB()
+{
+	return obb;
+}
+
 void Collider::setType(ColliderType type)
 {
 	this->type = type;

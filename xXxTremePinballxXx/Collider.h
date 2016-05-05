@@ -95,6 +95,7 @@ public:
 	void calculateAABB();
 	vector3 GetLastCollision();
 	OBB UpdateOBB();
+	const OBB GetOBB();
 
 	/*
 	IsColliding
