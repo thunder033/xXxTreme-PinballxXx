@@ -165,6 +165,7 @@ xcopy "$(SolutionDir)include\RE\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GOTransform.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OctNode.cpp" />
     <ClCompile Include="PinballTable.cpp" />
     <ClCompile Include="TheBigScore.cpp" />
     <ClCompile Include="Wall.cpp" />
@@ -180,6 +181,7 @@ xcopy "$(SolutionDir)include\RE\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GOTransform.h" />
     <ClInclude Include="OBB.hpp" />
+    <ClInclude Include="OctNode.h" />
     <ClInclude Include="PinballTable.h" />
     <ClInclude Include="Projection.hpp" />
     <ClInclude Include="TheBigScore.h" />
