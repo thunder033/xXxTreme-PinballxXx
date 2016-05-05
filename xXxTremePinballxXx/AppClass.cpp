@@ -40,7 +40,7 @@ void App::InitVariables(void)
 	flipper = new Flipper();
 	flipper->Translate(vector3(-2.5f, -4.5f, 0.75f));
 
-	physicsTickTime = 1.0 / 90.0; // We don't do integration, so we have to set the physics tick rate to be _really_ high
+	physicsTickTime = 1.0 / 95.0; // We don't do integration, so we have to set the physics tick rate to be _really_ high
 	timeSinceLastPhysicsUpdate = 0.0;
 }
 
