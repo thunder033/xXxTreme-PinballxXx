@@ -16,35 +16,30 @@ enum class ObjectType
 	Ball
 };
 
-
+//class Entity;
 class GameObject
 {
 	const int id;
-	float mass;
-	float elasictiy;
-	
-	vector3 lastPosition;
-
 	MeshClass* mesh;
 
-	bool hasFrameCollisions;
 	vector3 debugColor;
 	bool debugAABBMode;
 	bool debugNABMode;
-
-	static std::vector<GameObject*> instances;
+	
 	static int selectedInstanceIndex;
-	static MeshManagerSingleton* renderer;
 	static int curID;
-	static int checkCount;
 protected:
 	Collider* collider;
 	void Scale(vector3);
 	GOTransform* transform;
 	vector3 velocity;
 	vector3 acceleration;
+	bool hasFrameCollisions;
 	std::unordered_map<int, Collision*> frameCollisions;
-	void AddFrameCollision(int, Collision*);
+
+	static MeshManagerSingleton* renderer;
+	static std::vector<GameObject*> instances;
+	static int checkCount;
 public:
 	GameObject();
 	GameObject(MeshClass*);
@@ -59,10 +54,6 @@ public:
 	const int GetID();
 
 	void SetOrigin(vector3);
-
-	const vector3& GetVelocity() const;
-
-	void SetVelocity(const vector3& newVelocity);
 
 	vector3 GetOrigin() const;
 
@@ -85,6 +76,8 @@ public:
 	void RotateTo(quaternion);
 
 	virtual void Update(double);
+
+	void AddFrameCollision(int, Collision*);
 
 	virtual void OnCollision(const CollisionEvent);
 
@@ -117,6 +110,8 @@ public:
 	static int GetGameObjectCount();
 
 	static int GetCheckCount();
+
+	static const std::vector<GameObject*>& GetInstances();
 };
 
 #endif

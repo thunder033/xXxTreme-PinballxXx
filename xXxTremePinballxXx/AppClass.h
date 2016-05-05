@@ -22,6 +22,10 @@ private:
 
 	Ball* obj2;
 	Flipper* flipper;
+
+	double timeSinceLastPhysicsUpdate;
+	double physicsTickTime;
+
 public:
 	typedef ReEngAppClass super;
 

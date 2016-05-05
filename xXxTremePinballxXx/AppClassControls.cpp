@@ -9,7 +9,7 @@ void App::ProcessKeyboard(void)
 #pragma region ON_KEY_PRESS_RELEASE
 	static bool	bLastF1 = false, bLastF2 = false, bLastF3 = false, bLastF4 = false, bLastF5 = false,
 				bLastF6 = false, bLastF7 = false, bLastF8 = false, bLastF9 = false, bLastF10 = false,
-				bLastEscape = false, bLastF = false;
+				bLastEscape = false, bLastF = false, bLastSpace = false;
 #define ON_KEY_PRESS_RELEASE(key, pressed_action, released_action){  \
 			bool pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::key);			\
 			if(pressed){											\
@@ -56,8 +56,6 @@ void App::ProcessKeyboard(void)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		obj2->Accelerate(vector3(0, -fSpeed, 0));
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		flipper->Flip();
 #pragma endregion
 
 #pragma region Other Actions
@@ -72,6 +70,7 @@ void App::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F8, GameObject::ToggleSelectedDebugMode(CT_NAB), NULL);
 	ON_KEY_PRESS_RELEASE(F9, GameObject::ToggleDebugMode(CT_AABB), NULL);
 	ON_KEY_PRESS_RELEASE(F10, GameObject::ToggleDebugMode(CT_NAB), NULL);
+	ON_KEY_PRESS_RELEASE(Space, flipper->Flip(), NULL);
 	static bool bFPSControll = false;
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));
 #pragma endregion

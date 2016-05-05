@@ -17,9 +17,6 @@ GameObject::GameObject(MeshClass * mesh) : id(curID++)
 	this->mesh = mesh;
 	transform = new GOTransform();
 
-	velocity = vector3(0);
-	acceleration = vector3(0);
-
 	hasFrameCollisions = false;
 	frameCollisions = {};
 	debugColor = REGREEN;
@@ -75,16 +72,6 @@ vector3 GameObject::GetOrigin() const
 const vector3& GameObject::GetPosition() const
 {
 	return transform->GetPosition();
-}
-
-const vector3& GameObject::GetVelocity() const
-{
-	return this->velocity;
-}
-
-void GameObject::SetVelocity(const vector3& newVelocity)
-{
-	this->velocity = newVelocity;
 }
 
 const quaternion& GameObject::GetRotation() const
@@ -145,36 +132,7 @@ void GameObject::AddFrameCollision(int objID, Collision * collision)
 
 void GameObject::Update(double deltaTime)
 {
-	
 	hasFrameCollisions = false;
-	for (std::vector<GameObject*>::iterator it = instances.begin(); it != instances.end(); ++it)
-	{
-		if (*it == this || frameCollisions.find((*it)->GetID()) != frameCollisions.end())
-			continue;
-
-		checkCount++;
-		Collision* collision = (*it)->collider->IsColliding(this->collider);
-
-		if (collision != nullptr) {
-			collision->collider1 = *it;
-			collision->collider2 = this;
-		}
-		
-		AddFrameCollision((*it)->GetID(), collision);
-		(*it)->AddFrameCollision(id, collision);
-
-		if (collision != nullptr && collision->colliding) {
-			OnCollision(collision->GetEvent(this));
-			(*it)->OnCollision(collision->GetEvent(*it));
-		}
-	}
-
-	frameCollisions.clear();
-
-	velocity += acceleration * static_cast<float>(deltaTime);
-	Translate(velocity * static_cast<float>(deltaTime));
-	acceleration = vector3(0.0f, 0.0f, 0.0f);
-
 	collider->UpdateOBB();
 }
 
@@ -293,5 +251,10 @@ int GameObject::GetGameObjectCount()
 int GameObject::GetCheckCount()
 {
 	return checkCount;
+}
+
+const std::vector<GameObject*>& GameObject::GetInstances()
+{
+	return instances;
 }
 

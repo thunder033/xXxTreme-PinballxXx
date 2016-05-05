@@ -2,6 +2,7 @@
 #define _WALL_H_
 
 #include "GameObject.h"
+#include "Entity.h"
 
 class Wall : public GameObject
 {

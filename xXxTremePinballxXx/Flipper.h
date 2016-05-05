@@ -1,7 +1,8 @@
 #pragma once
-#include "GameObject.h"
+#include "Entity.h"
+#include "Ball.h"
 
-class Flipper : public GameObject
+class Flipper : public Entity
 {
 	quaternion flipStart;
 	vector3 flipRotation;
