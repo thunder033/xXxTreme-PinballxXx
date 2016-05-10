@@ -71,20 +71,12 @@ void App::Update(void)
 	timeSinceLastPhysicsUpdate += deltaTime;
 	if (timeSinceLastPhysicsUpdate >= physicsTickTime)
 	{
-		std::vector<Entity*> entities;
-		for (auto* obj : GameObject::GetInstances())
-		{
-			Entity* ent = dynamic_cast<Entity*>(obj);
-			if (ent)
-				entities.push_back(ent);
-		}
-
 		int tickCount = 0;
 		while (timeSinceLastPhysicsUpdate >= physicsTickTime)
 		{
 			++tickCount;
 			timeSinceLastPhysicsUpdate -= physicsTickTime;
-			for (auto* ent : entities)
+			for (auto* ent : Entity::GetInstances())
 			{
 				ent->PhysicsUpdate(physicsTickTime);
 			}
@@ -154,6 +146,7 @@ void App::Display(void)
 void App::Release(void)
 {
 	super::Release(); //release the memory of the inherited fields
+	GameObject::ReleaseInstances();
 
 	delete Table;
 }

@@ -13,6 +13,8 @@ protected:
 
 	void SetMass(float mass);
 	void SetElascity(float elascity);
+
+	static std::vector<Entity*> instances;
 public:
 	Entity(MeshClass*);
 	Entity();
@@ -29,5 +31,9 @@ public:
 	virtual void PhysicsUpdate(double deltaTime);
 
 	virtual void Update(double deltaTime) override;
+
+	static void init();
+
+	static std::vector<Entity*> GetInstances();
 };
 

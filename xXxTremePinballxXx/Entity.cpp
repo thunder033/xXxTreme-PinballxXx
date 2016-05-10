@@ -1,5 +1,14 @@
 #include "Entity.h"
 
+std::vector<Entity*> Entity::instances;
+
+void Entity::init() {
+	instances = std::vector<Entity*>();
+}
+
+std::vector<Entity*> Entity::GetInstances() {
+	return Entity::instances;
+}
 
 void Entity::SetMass(float mass)
 {
@@ -13,6 +22,7 @@ void Entity::SetElascity(float elascity)
 
 Entity::Entity(MeshClass* mesh) : GameObject(mesh)
 {
+	instances.push_back(this);
 	velocity = vector3(0);
 	acceleration = vector3(0);
 
@@ -22,6 +32,7 @@ Entity::Entity(MeshClass* mesh) : GameObject(mesh)
 
 Entity::Entity() : GameObject()
 {
+	instances.push_back(this);
 	velocity = vector3(0);
 	acceleration = vector3(0);
 
@@ -57,7 +68,7 @@ void Entity::SetVelocity(const vector3& newVelocity)
 
 void Entity::PhysicsUpdate(double deltaTime)
 {
-	for (std::vector<GameObject*>::iterator it = GameObject::instances.begin(); it != instances.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = GameObject::instances.begin(); it != GameObject::instances.end(); ++it)
 	{
 		if (*it == this || frameCollisions.find((*it)->GetID()) != frameCollisions.end())
 			continue;

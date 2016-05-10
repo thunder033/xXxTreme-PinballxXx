@@ -258,3 +258,6 @@ const std::vector<GameObject*>& GameObject::GetInstances()
 	return instances;
 }
 
+void GameObject::ReleaseInstances() {
+	instances.clear();
+}
