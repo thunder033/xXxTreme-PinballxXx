@@ -64,7 +64,7 @@ void App::Update(void)
 	//Set the model matrix for the first model to be the arcball
 	m_pMeshMngr->SetModelMatrix(ToMatrix4(m_qArcBall), 0);
 
-	obj2->RotateTo(m_qArcBall);
+	//obj2->RotateTo(m_qArcBall);
 
 	double deltaTime = m_pSystem->LapClock();
 

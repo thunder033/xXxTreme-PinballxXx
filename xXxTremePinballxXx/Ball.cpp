@@ -18,7 +18,8 @@ Ball::~Ball()
 void Ball::PhysicsUpdate(double deltaTime)
 {
 	Entity::PhysicsUpdate(deltaTime);
-	//GameObject::Rotate(quaternion(angularVelocity * static_cast<float>(deltaTime)));
+	angularVelocity.z = -velocity.x * 2.f;
+	GameObject::Rotate(quaternion(angularVelocity * static_cast<float>(deltaTime)));
 }
 
 void Ball::Update(double DeltaTime)
@@ -36,11 +37,11 @@ void Ball::Accelerate(vector3 force)
 
 void Ball::OnCollision(CollisionEvent collision)
 {
-	vector3 disp = GetPosition() - collision.collideeIntersectPt;
-	if (glm::length2(disp) > 0 && glm::length2(velocity) < 4.f) {
+	vector3 disp = collision.collideeIntersectPt - GetPosition();
+	if (glm::length2(disp) > 0 && glm::length2(velocity) < 1.f) {
 		vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
-		vector3 slope = vector3(-normal.y, normal.x, 0);
-		acceleration = normal * glm::length(Gravity) + vector3(normal.x * 10.0f, 0, 0);
+		//vector3 slope = vector3(-normal.y, normal.x, 0);
+		acceleration = normal * glm::length(Gravity) + vector3(-normal.x * 100.0f, 0, 0);
 	}
 }
 
