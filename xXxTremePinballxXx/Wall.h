@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "Entity.h"
+#include "Ball.h"
 
 class Wall : public GameObject
 {

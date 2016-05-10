@@ -86,9 +86,8 @@ void Flipper::OnCollision(CollisionEvent collision)
 		}		
 		double velocityImpulse = flipperMagnitude * flipSpeed * 3.75f;
 		vector3 newBallVelocity = glm::reflect(ball->GetVelocity(), normal) + ((float)velocityImpulse * normal);
-		
+
 		ball->SetVelocity(newBallVelocity * ball->GetElascity());
-		ball->Translate(-collision.penetrationVector);
 
 		break;
 	}

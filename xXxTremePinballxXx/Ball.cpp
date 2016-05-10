@@ -6,7 +6,7 @@ vector3 Ball::Gravity = vector3(0.0f, -6.0f, 0.0f);
 Ball::Ball() : Entity((mesh = new PrimitiveClass(), mesh->GenerateSphere(0.2, 12, REWHITE), mesh))
 {
 	collider->setType(ColliderType::Sphere);
-	SetElascity(.65f);
+	SetElascity(.55f);
 	angularVelocity = vector3(0.0f, 0.0f, 9.1f);
 }
 
@@ -40,15 +40,16 @@ void Ball::OnCollision(CollisionEvent collision)
 	vector3 disp = collision.collideeIntersectPt - GetPosition();
 	vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
 	float normalVelocity = glm::dot(normal, velocity);
+	vector3 slope = vector3(normal.y, -normal.x, 0);
 
-	if (glm::length2(disp) > 0 && normalVelocity < 1.f) {
+	if (glm::length2(disp) > 0 && normalVelocity < 0.3f && abs(normal.y) != abs(Gravity.y)) {
 		
-		vector3 slope = vector3(-normal.y, normal.x, 0);
-		if (slope.y > 0.01f) {
-			acceleration = normal * glm::length(Gravity) + slope * 10.f;
-		}
+		float mag = glm::dot(slope, Gravity);
+		acceleration = slope * mag;
 		
 	}
+
+	Translate(collision.penetrationVector);
 }
 
 ObjectType Ball::GetType()
