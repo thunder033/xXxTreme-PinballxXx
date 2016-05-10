@@ -38,10 +38,16 @@ void Ball::Accelerate(vector3 force)
 void Ball::OnCollision(CollisionEvent collision)
 {
 	vector3 disp = collision.collideeIntersectPt - GetPosition();
-	if (glm::length2(disp) > 0 && glm::length2(velocity) < 1.f) {
-		vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
-		//vector3 slope = vector3(-normal.y, normal.x, 0);
-		acceleration = normal * glm::length(Gravity) + vector3(-normal.x * 100.0f, 0, 0);
+	vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
+	float normalVelocity = glm::dot(normal, velocity);
+
+	if (glm::length2(disp) > 0 && normalVelocity < 1.f) {
+		
+		vector3 slope = vector3(-normal.y, normal.x, 0);
+		if (slope.y > 0.01f) {
+			acceleration = normal * glm::length(Gravity) + slope * 10.f;
+		}
+		
 	}
 }
 

@@ -14,11 +14,16 @@ void Wall::OnCollision(CollisionEvent collision)
 	{
 		Entity* ball = dynamic_cast<Entity*>(collision.collidee);
 		quaternion orientation = this->transform->GetRotation();
-		
+
 		vector3 disp = ball->GetPosition() - collision.collideeIntersectPt;
 		vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
-		vector3 newBallVelocity = glm::reflect(ball->GetVelocity(), normal);
-		ball->SetVelocity(newBallVelocity * ball->GetElascity());
+		float normalVelocity = glm::dot(normal, ball->GetVelocity());
+
+		//if (abs(normalVelocity) > .1f) {
+			vector3 newBallVelocity = glm::reflect(ball->GetVelocity(), normal);
+			ball->SetVelocity(newBallVelocity * ball->GetElascity());
+		//}
+		
 		ball->Translate(-collision.penetrationVector);
 		break;
 	}
