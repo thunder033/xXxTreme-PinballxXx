@@ -12,7 +12,7 @@ class Flipper : public Entity
 
 	PrimitiveClass* mesh;
 public:
-	Flipper();
+	Flipper(boolean);
 	~Flipper();
 	void Update(double);
 

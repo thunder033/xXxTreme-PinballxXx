@@ -22,6 +22,7 @@ private:
 
 	Ball* obj2;
 	Flipper* flipper;
+	Flipper* flipperR;
 
 	double timeSinceLastPhysicsUpdate;
 	double physicsTickTime;

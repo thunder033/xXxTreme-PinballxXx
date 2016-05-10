@@ -3,14 +3,22 @@
 #include <glm/glm.hpp>
 
 
-Flipper::Flipper() : Entity((mesh = new PrimitiveClass(), mesh->GenerateCube(1, RERED), mesh))
+Flipper::Flipper(boolean flipped) : Entity((mesh = new PrimitiveClass(), mesh->GenerateCube(1, RERED), mesh))
 {
-	SetOrigin(vector3(-0.5f, 0, 0));
-	Scale(vector3(1.5f, .4f, .4f));
-	RotateTo(vector3(0.f, 0.f, -.2f));
-
-	flipRotation = vector3(0, 0, PI / 3.0f);
+	if (!flipped) {
+		SetOrigin(vector3(-0.5f, 0, 0));
+		Scale(vector3(1.5f, .4f, .4f));
+		RotateTo(vector3(0.f, 0.f, -.2f));
+		flipRotation = vector3(0, 0, PI / 3.0f);
+	}
+	else {
+		SetOrigin(vector3(0.5f, 0, 0));
+		Scale(vector3(1.35f, .4f, .4f));
+		RotateTo(vector3(0.f, 0.f, .2f));
+		flipRotation = vector3(0, 0, PI / -3.0f);
+	}
 	flipStart = transform->GetRotation();
+
 	flipPct = 0;
 	flipSpeed = 7.5f;
 	flipping = false;

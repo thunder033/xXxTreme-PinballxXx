@@ -67,7 +67,7 @@ const matrix4& GOTransform::GetMatrix() const
 
 void GOTransform::Rotate(quaternion rotation)
 {
-	this->orientation = this->orientation * rotation;
+	this->orientation = glm::normalize(rotation * this->orientation);
 	calculateMatrix();
 }
 

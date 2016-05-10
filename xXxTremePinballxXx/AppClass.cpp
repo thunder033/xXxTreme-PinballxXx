@@ -33,12 +33,14 @@ void App::InitVariables(void)
 	cone->GenerateCone(1, 1.5f, 10, REBLUE);
 
 	obj2 = new Ball();
-	obj2->Translate(vector3(3, 0, 0));
+	obj2->Translate(vector3(3.25f, 0, 0));
 	//obj2->Rotate(quaternion(vector3(0, 45, 0)));
 	//obj2->SetOrigin(vector3(0, 0.5f, 0));
 
-	flipper = new Flipper();
+	flipper = new Flipper(false);
 	flipper->Translate(vector3(-2.5f, -4.5f, 0.75f));
+	//flipperR = new Flipper(true);
+	//flipperR->Translate(vector3(1.f, -4.5f, 0.75f));
 
 	physicsTickTime = 1.0 / 95.0; // We don't do integration, so we have to set the physics tick rate to be _really_ high
 	timeSinceLastPhysicsUpdate = 0.0;
