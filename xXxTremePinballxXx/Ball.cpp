@@ -37,27 +37,44 @@ void Ball::Accelerate(vector3 force)
 
 void Ball::OnCollision(CollisionEvent collision)
 {
+	//Get the vector from the center of the ball to it's edge
 	vector3 disp = -(collision.collideeIntersectPt - GetPosition()) - collision.penetrationVector;
+	//Get the normal of collision (perpendicular to collision surface)
 	vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
-	float normalVelocity = glm::dot(normal, velocity);
+	//get the slope of collision (parallel to collision surface or tangent if it's circular)
 	vector3 slope = vector3(normal.y, -normal.x, 0);
+	//This is a bit hacky, but were only interested in the slope in the direction of gravity
 	slope = slope.y > 0 ? -slope : slope;
 
+	/*
+	* make the ball roll if: 
+	* - there's non-zero displacment, 
+	* - we're below a minimum of velocity normal to the surface
+	* - and normal is in the upright direction (don't roll on upside-down surfaces)
+	*/
+	float normalVelocity = glm::dot(normal, velocity);
 	if (glm::length2(disp) > 0 && normalVelocity < 0.3f && glm::sign(normal.y) != glm::sign(Gravity.y)) {
+		//Get the magnitude of gravity in the direction of slope
 		float mag = glm::dot(slope, Gravity);
+		//set the acceleration to this
 		acceleration = slope * mag;	
 	}
 
+	//Don't apply bounce physics if there's no velocity normal to the surface
 	float velocityInNormal = glm::dot(normal, GetVelocity());
-
 	if (abs(velocityInNormal) > 0) {
+		//calculate the reflected ball velocity
 		vector3 newBallVelocity = glm::reflect(GetVelocity(), -normal);
+		//get the normalized
 		vector3 velocityNormal = glm::normalize(newBallVelocity);
+		//apply the ball's elascity to only the velocity component normal to the surface
 		vector3 normalVelocity = velocityNormal * glm::dot(newBallVelocity, normal) * GetElascity();
-		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .85f;
+		//apply friction to the ball's roll in the component parallel to the surface
+		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .90f;
 		SetVelocity((normalVelocity + slopeVelocity));
 	}
 
+	//Move the ball out of the object it's intersecting with
 	Translate(collision.penetrationVector);
 }
 
