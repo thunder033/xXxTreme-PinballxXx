@@ -54,6 +54,9 @@
     <ClCompile Include="OctNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Plunger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppClass.h">

@@ -12,9 +12,9 @@ class Flipper : public Entity
 
 	PrimitiveClass* mesh;
 public:
-	Flipper(boolean);
-	~Flipper();
-	void Update(double);
+	Flipper(boolean flipped);
+
+	virtual void Update(double) override;
 
 	void Flip();
 	void Unflip();

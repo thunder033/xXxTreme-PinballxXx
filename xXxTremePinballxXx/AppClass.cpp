@@ -42,6 +42,8 @@ void App::InitVariables(void)
 	//flipperR = new Flipper(true);
 	//flipperR->Translate(vector3(1.f, -4.5f, 0.75f));
 
+	plunger = new Plunger(vector3(3.5f, -5.4f, 0.75f), vector3(3.5f, 0.f, 0.75f));
+
 	physicsTickTime = 1.0 / 95.0; // We don't do integration, so we have to set the physics tick rate to be _really_ high
 	timeSinceLastPhysicsUpdate = 0.0;
 }
