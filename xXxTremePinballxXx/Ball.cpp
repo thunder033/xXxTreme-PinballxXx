@@ -6,7 +6,7 @@ vector3 Ball::Gravity = vector3(0.0f, -6.0f, 0.0f);
 Ball::Ball() : Entity((mesh = new PrimitiveClass(), mesh->GenerateSphere(0.2f, 12, REWHITE), mesh))
 {
 	collider->setType(ColliderType::Sphere);
-	SetElascity(.55f);
+	SetElascity(.60f);
 	angularVelocity = vector3(0.0f, 0.0f, 9.1f);
 }
 
@@ -61,25 +61,26 @@ void Ball::OnCollision(const CollisionEvent& e)
 	* - we're below a minimum of velocity normal to the surface
 	* - and normal is in the upright direction (don't roll on upside-down surfaces)
 	*/
-	float normalVelocity = glm::dot(normal, velocity);
-	if (glm::length2(disp) > 0 && normalVelocity < 0.3f && glm::sign(normal.y) != glm::sign(Gravity.y)) {
+	float normalVelocity = abs(glm::dot(normal, velocity));
+	float rollLimit = .4f;
+	if (glm::length2(disp) > 0 && abs(normalVelocity) < rollLimit && glm::sign(normal.y) != glm::sign(Gravity.y)) {
 		//Get the magnitude of gravity in the direction of slope
 		float mag = glm::dot(slope, Gravity);
 		//set the acceleration to this
-		acceleration = slope * mag;	
+		acceleration = ((slope * mag) * (rollLimit - normalVelocity)/rollLimit) + (normalVelocity/rollLimit) * acceleration;	
 	}
 
 	//Don't apply bounce physics if there's no velocity normal to the surface
 	float velocityInNormal = glm::dot(normal, GetVelocity());
 	if (abs(velocityInNormal) > 0) {
-		//calculate the reflected ball velocity
-		vector3 newBallVelocity = glm::reflect(GetVelocity(), -normal);
+		//calculate the reflected ball velocity (-->THIS LINE IS PROBABLY THE CAUSE OF WEIRDNESS<--)
+		vector3 newBallVelocity = glm::reflect(GetVelocity(), slope);
 		//get the normalized
 		vector3 velocityNormal = glm::length2(newBallVelocity) > 0 ? glm::normalize(newBallVelocity) : vector3(0, 0, 0);
 		//apply the ball's elascity to only the velocity component normal to the surface
 		vector3 normalVelocity = velocityNormal * glm::dot(newBallVelocity, normal) * GetElascity();
 		//apply friction to the ball's roll in the component parallel to the surface
-		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .95f;
+		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .83f;
 		SetVelocity((normalVelocity + slopeVelocity));
 	}
 
