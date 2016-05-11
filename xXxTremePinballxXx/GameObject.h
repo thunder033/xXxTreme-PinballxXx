@@ -57,9 +57,9 @@ public:
 
 	vector3 GetOrigin() const;
 
-	const vector3& GetPosition() const;
+	const vector3 GetPosition() const;
 
-	const quaternion& GetRotation() const;
+	const quaternion GetRotation() const;
 
 	GOTransform* GetTransform() const;
 

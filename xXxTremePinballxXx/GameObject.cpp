@@ -69,12 +69,12 @@ vector3 GameObject::GetOrigin() const
 	return transform->GetOrigin();
 }
 
-const vector3& GameObject::GetPosition() const
+const vector3 GameObject::GetPosition() const
 {
 	return transform->GetPosition();
 }
 
-const quaternion& GameObject::GetRotation() const
+const quaternion GameObject::GetRotation() const
 {
 	return transform->GetRotation();
 }
