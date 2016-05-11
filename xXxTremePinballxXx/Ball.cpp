@@ -37,6 +37,14 @@ void Ball::Accelerate(vector3 force)
 
 void Ball::OnCollision(CollisionEvent collision)
 {
+	if (collision.collidee->GetType() == ObjectType::Flipper) {
+		Translate(collision.penetrationVector);
+		std::shared_ptr<Collision> newCollision = collision.collidee->GetCollider()->IsColliding(this->GetCollider());
+		if (newCollision != nullptr) {
+			collision = newCollision->GetEvent(this);
+		}
+	}
+
 	//Get the vector from the center of the ball to it's edge
 	vector3 disp = -(collision.collideeIntersectPt - GetPosition()) - collision.penetrationVector;
 	//Get the normal of collision (perpendicular to collision surface)
