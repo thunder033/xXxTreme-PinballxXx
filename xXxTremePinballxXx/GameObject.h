@@ -35,7 +35,7 @@ protected:
 	vector3 velocity;
 	vector3 acceleration;
 	bool hasFrameCollisions;
-	std::unordered_map<int, Collision*> frameCollisions;
+	std::unordered_map<int, std::shared_ptr<Collision>> frameCollisions;
 
 	static MeshManagerSingleton* renderer;
 	static std::vector<GameObject*> instances;
@@ -77,7 +77,7 @@ public:
 
 	virtual void Update(double);
 
-	void AddFrameCollision(int, Collision*);
+	void AddFrameCollision(int id, std::shared_ptr<Collision> collision);
 
 	virtual void OnCollision(const CollisionEvent);
 

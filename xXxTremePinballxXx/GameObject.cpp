@@ -124,7 +124,7 @@ void GameObject::Scale(vector3 scale)
 	collider->calculateAABB();
 }
 
-void GameObject::AddFrameCollision(int objID, Collision * collision)
+void GameObject::AddFrameCollision(int objID, std::shared_ptr<Collision> collision)
 {
 	hasFrameCollisions = hasFrameCollisions || (collision != nullptr && collision->colliding);
 	frameCollisions.insert({ { objID, collision } });

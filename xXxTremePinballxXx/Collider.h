@@ -104,7 +104,7 @@ public:
 	Collider* const a_pOther -> Other object to check collision with
 	OUTPUT: bool -> check of the collision
 	*/
-	Collision* IsColliding(Collider* const a_pOther);
+	std::shared_ptr<Collision> IsColliding(Collider* const a_pOther);
 
 private:
 	/*

@@ -74,7 +74,7 @@ void Entity::PhysicsUpdate(double deltaTime)
 			continue;
 
 		checkCount++;
-		Collision* collision = (*it)->GetCollider()->IsColliding(this->collider);
+		std::shared_ptr<Collision> collision = (*it)->GetCollider()->IsColliding(this->collider);
 
 		if (collision != nullptr) {
 			collision->collider1 = *it;

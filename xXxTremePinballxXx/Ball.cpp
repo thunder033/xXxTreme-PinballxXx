@@ -70,7 +70,7 @@ void Ball::OnCollision(CollisionEvent collision)
 		//apply the ball's elascity to only the velocity component normal to the surface
 		vector3 normalVelocity = velocityNormal * glm::dot(newBallVelocity, normal) * GetElascity();
 		//apply friction to the ball's roll in the component parallel to the surface
-		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .90f;
+		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .95f;
 		SetVelocity((normalVelocity + slopeVelocity));
 	}
 
