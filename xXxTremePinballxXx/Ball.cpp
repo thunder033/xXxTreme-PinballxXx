@@ -35,8 +35,9 @@ void Ball::Accelerate(vector3 force)
 	acceleration += force;
 }
 
-void Ball::OnCollision(const CollisionEvent& collision)
+void Ball::OnCollision(const CollisionEvent& e)
 {
+	CollisionEvent collision = e;
 	if (collision.collidee->GetType() == ObjectType::Flipper) {
 		Translate(collision.penetrationVector);
 		std::shared_ptr<Collision> newCollision = collision.collidee->GetCollider()->IsColliding(this->GetCollider());
