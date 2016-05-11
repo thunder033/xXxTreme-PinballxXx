@@ -79,7 +79,7 @@ public:
 
 	void AddFrameCollision(int id, std::shared_ptr<Collision> collision);
 
-	virtual void OnCollision(const CollisionEvent);
+	virtual void OnCollision(const CollisionEvent&);
 
 	void Render(matrix4, matrix4);
 

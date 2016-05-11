@@ -12,7 +12,7 @@ class Wall : public GameObject
 public:
 	Wall(vector3);
 
-	virtual void OnCollision(const CollisionEvent) override;
+	virtual void OnCollision(const CollisionEvent&) override;
 };
 
 

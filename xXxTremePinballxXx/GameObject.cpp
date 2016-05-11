@@ -136,7 +136,7 @@ void GameObject::Update(double deltaTime)
 	collider->UpdateOBB();
 }
 
-void GameObject::OnCollision(const CollisionEvent collision)
+void GameObject::OnCollision(const CollisionEvent& collision)
 {
 	renderer->AddSphereToQueue(glm::translate(collision.collidee->GetPosition() + collision.collideeIntersectPt) * glm::scale(vector3(.1f)), REYELLOW, SOLID);
 }

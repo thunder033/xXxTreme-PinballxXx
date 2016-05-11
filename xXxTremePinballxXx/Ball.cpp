@@ -3,7 +3,7 @@
 
 vector3 Ball::Gravity = vector3(0.0f, -6.0f, 0.0f);
 
-Ball::Ball() : Entity((mesh = new PrimitiveClass(), mesh->GenerateSphere(0.2, 12, REWHITE), mesh))
+Ball::Ball() : Entity((mesh = new PrimitiveClass(), mesh->GenerateSphere(0.2f, 12, REWHITE), mesh))
 {
 	collider->setType(ColliderType::Sphere);
 	SetElascity(.55f);
@@ -35,7 +35,7 @@ void Ball::Accelerate(vector3 force)
 	acceleration += force;
 }
 
-void Ball::OnCollision(CollisionEvent collision)
+void Ball::OnCollision(const CollisionEvent& collision)
 {
 	if (collision.collidee->GetType() == ObjectType::Flipper) {
 		Translate(collision.penetrationVector);
