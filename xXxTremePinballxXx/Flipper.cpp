@@ -84,10 +84,10 @@ void Flipper::OnCollision(CollisionEvent collision)
 			flipperMagnitude = relEdge / length;
 			//flipperMagnitude = ((flipRotation.z - flipStart.z) * flipSpeed) * (glm::distance(collision.intersectPt, (GetPosition() + GetOrigin()))) / 3.f;
 		}		
-		double velocityImpulse = flipperMagnitude * flipSpeed * 3.75f;
-		vector3 newBallVelocity = glm::reflect(ball->GetVelocity(), normal) + ((float)velocityImpulse * normal);
+		double velocityImpulse = flipperMagnitude * flipSpeed * 1.75f;
+		vector3 newBallVelocity = ball->GetVelocity() + ((float)velocityImpulse * normal);
 
-		ball->SetVelocity(newBallVelocity * ball->GetElascity());
+		ball->SetVelocity(newBallVelocity);
 
 		break;
 	}

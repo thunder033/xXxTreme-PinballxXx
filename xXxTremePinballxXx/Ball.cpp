@@ -37,16 +37,25 @@ void Ball::Accelerate(vector3 force)
 
 void Ball::OnCollision(CollisionEvent collision)
 {
-	vector3 disp = collision.collideeIntersectPt - GetPosition();
+	vector3 disp = -(collision.collideeIntersectPt - GetPosition()) - collision.penetrationVector;
 	vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
 	float normalVelocity = glm::dot(normal, velocity);
 	vector3 slope = vector3(normal.y, -normal.x, 0);
+	slope = slope.y > 0 ? -slope : slope;
 
-	if (glm::length2(disp) > 0 && normalVelocity < 0.3f && abs(normal.y) != abs(Gravity.y)) {
-		
+	if (glm::length2(disp) > 0 && normalVelocity < 0.3f && glm::sign(normal.y) != glm::sign(Gravity.y)) {
 		float mag = glm::dot(slope, Gravity);
-		acceleration = slope * mag;
-		
+		acceleration = slope * mag;	
+	}
+
+	float velocityInNormal = glm::dot(normal, GetVelocity());
+
+	if (abs(velocityInNormal) > 0) {
+		vector3 newBallVelocity = glm::reflect(GetVelocity(), -normal);
+		vector3 velocityNormal = glm::normalize(newBallVelocity);
+		vector3 normalVelocity = velocityNormal * glm::dot(newBallVelocity, normal) * GetElascity();
+		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .85f;
+		SetVelocity((normalVelocity + slopeVelocity));
 	}
 
 	Translate(collision.penetrationVector);
