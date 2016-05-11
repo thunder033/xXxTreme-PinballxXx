@@ -48,7 +48,7 @@ void Plunger::OnCollision(const CollisionEvent& collision)
 		if (glm::length(ball->GetVelocity()) > 4.f)
 			return;
 
-		ball->GetTransform()->SetPosition(GetPosition() + vector3(0.f, 0.3f, 0.f));
+		ball->GetTransform()->SetPosition(GetPosition() + vector3(-0.1f, 0.3f, 0.f));
 
 		if (launching)
 		{
