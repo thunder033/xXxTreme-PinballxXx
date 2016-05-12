@@ -146,6 +146,16 @@ const OBB Collider::GetOBB()
 	return obb;
 }
 
+vector3 Collider::GetAABBMin()
+{
+	return min;
+}
+
+vector3 Collider::GetAABBMax()
+{
+	return max;
+}
+
 void Collider::setType(ColliderType type)
 {
 	this->type = type;

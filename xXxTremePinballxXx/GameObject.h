@@ -29,6 +29,8 @@ class GameObject
 	
 	static int selectedInstanceIndex;
 	static int curID;
+
+	class OctNode* parent = nullptr;
 protected:
 	Collider* collider;
 	void Scale(vector3);
@@ -44,6 +46,9 @@ public:
 	GameObject();
 	GameObject(MeshClass*);
 	virtual ~GameObject();
+
+	OctNode* GetOctNode();
+	void SetOctNode(OctNode*);
 
 	virtual ObjectType GetType();
 

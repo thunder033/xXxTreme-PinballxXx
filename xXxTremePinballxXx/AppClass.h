@@ -6,6 +6,7 @@
 #include "PinballTable.h"
 #include "GameObject.h"
 #include "Ball.h"
+#include "OctNode.h"
 #include "Flipper.h"
 #include "Plunger.h"
 #include <SFML\Graphics.hpp>
@@ -20,6 +21,8 @@ private:
 	Ball* obj2;
 	Flipper* flipper;
 	Flipper* flipperR;
+
+	Octree* octree;
 	Plunger* plunger;
 
 	double timeSinceLastPhysicsUpdate;
