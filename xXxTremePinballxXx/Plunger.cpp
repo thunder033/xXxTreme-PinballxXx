@@ -11,17 +11,42 @@ Plunger::Plunger(const vector3& start, const vector3 end)
 	launchPct = 0.f;
 	speed = 3.f;
 	collisionTest = ObjectType::Ball;
+
+	slide = new ChuteSlide();
+}
+
+Plunger::~Plunger()
+{
+	if (slide != nullptr) {
+		delete slide;
+		slide = nullptr;
+	}
 }
 
 void Plunger::Update(double dt)
 {
 	if (launching)
 	{
+		slide->ToggleOff();
 		launchPct += (float)(speed * dt);
 	}
 	else
 	{
 		launchPct -= (float)(speed * dt);
+	}
+
+	if (slideTriggered) {
+		slideElapsed += dt;
+		if (slideElapsed > slideTriggerTime)
+		{
+			slide->ToggleOn();
+			slideTriggered = false;
+		}
+	}
+
+	if (launchPct > .95f) {
+		slideElapsed = 0;
+		slideTriggered = true;
 	}
 
 	launchPct = glm::clamp(launchPct, 0.f, 1.f);
