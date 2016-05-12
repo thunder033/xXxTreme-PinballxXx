@@ -44,7 +44,7 @@ void App::InitVariables(void)
 
 	plunger = new Plunger(vector3(3.5f, -5.4f, 0.75f), vector3(3.5f, 3.f, 0.75f));
 
-	physicsTickTime = 1.0 / 90.0; // We don't do integration, so we have to set the physics tick rate to be _really_ high
+	physicsTickTime = 1.0 / 95.0; // We don't do integration, so we have to set the physics tick rate to be _really_ high
 	timeSinceLastPhysicsUpdate = 0.0;
 }
 
