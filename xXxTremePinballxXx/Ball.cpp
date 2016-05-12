@@ -6,7 +6,7 @@ vector3 Ball::Gravity = vector3(0.0f, -6.0f, 0.0f);
 Ball::Ball() : Entity((mesh = new PrimitiveClass(), mesh->GenerateSphere(0.2f, 12, REWHITE), mesh))
 {
 	collider->setType(ColliderType::Sphere);
-	SetElascity(.60f);
+	SetElasticity(.60f);
 	angularVelocity = vector3(0.0f, 0.0f, 9.1f);
 }
 
@@ -74,11 +74,11 @@ void Ball::OnCollision(const CollisionEvent& e)
 	float velocityInNormal = glm::dot(normal, GetVelocity());
 	if (abs(velocityInNormal) > 0) {
 		//calculate the reflected ball velocity (-->THIS LINE IS PROBABLY THE CAUSE OF WEIRDNESS<--)
-		vector3 newBallVelocity = glm::reflect(GetVelocity(), slope);
+		vector3 newBallVelocity = glm::reflect(GetVelocity(), normal);
 		//get the normalized
 		vector3 velocityNormal = glm::length2(newBallVelocity) > 0 ? glm::normalize(newBallVelocity) : vector3(0, 0, 0);
 		//apply the ball's elascity to only the velocity component normal to the surface
-		vector3 normalVelocity = velocityNormal * glm::dot(newBallVelocity, normal) * GetElascity();
+		vector3 normalVelocity = velocityNormal * glm::dot(newBallVelocity, normal) * GetElasticity();
 		//apply friction to the ball's roll in the component parallel to the surface
 		vector3 slopeVelocity = velocityNormal * glm::dot(newBallVelocity, slope) * .83f;
 		SetVelocity((normalVelocity + slopeVelocity));
