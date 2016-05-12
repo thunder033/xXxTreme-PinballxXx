@@ -2,6 +2,7 @@
 
 PinballTable::PinballTable()
 {
+	srand(time(NULL));
 	WhiteCube.GenerateCube(1.f, REWHITE);
 
 	GrayCube.GenerateCube(1.f, REGRAY);
@@ -87,6 +88,33 @@ PinballTable::PinballTable()
 	WallInst->Translate(Position);
 	WallInst->RotateTo(glm::radians(vector3(0.f, 0.f, 60.f)));
 	Walls.push_back(WallInst);
+
+	///////////////////////////////////////////////////////////////////////
+	//Assorted Crap
+	
+	Position = vector3(0.f, 0.f, 0.75f);
+	Scale = vector3(0.5f, .5f, 0.5f);
+	WallInst = new Wall(Scale);
+	WallInst->Translate(Position);
+	WallInst->RotateTo(glm::radians(vector3(0.f, 0.f, 60.f)));
+	Walls.push_back(WallInst);
+
+	Position = vector3(-1.5f, -1.f, 0.75f);
+	Scale = vector3(0.5f, .5f, 0.5f);
+	WallInst = new Wall(Scale);
+	WallInst->Translate(Position);
+	WallInst->RotateTo(glm::radians(vector3(0.f, 0.f, 0.f)));
+	Walls.push_back(WallInst);
+
+	for (int i = 0; i < 10; ++i)
+	{
+		Position = vector3((rand() % 6) - 3.f, (rand() % 7) - 3.5f, 0.75f);
+		Scale = vector3(0.5f, .5f, 0.5f);
+		WallInst = new Wall(Scale);
+		WallInst->Translate(Position);
+		WallInst->RotateTo(glm::radians(vector3(0.f, 0.f, (rand() % 180))));
+		Walls.push_back(WallInst);
+	}
 }
 
 void PinballTable::Render(matrix4 Proj, matrix4 View)
