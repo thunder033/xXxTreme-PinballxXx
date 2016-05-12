@@ -9,7 +9,7 @@ Plunger::Plunger(const vector3& start, const vector3 end)
 	launching = false;
 	Scale(vector3(1.f, 0.3f, 0.4f));
 	launchPct = 0.f;
-	speed = 7.5f;
+	speed = 5.f;
 }
 
 void Plunger::Update(double dt)
@@ -52,7 +52,7 @@ void Plunger::OnCollision(const CollisionEvent& collision)
 
 		if (launching)
 		{
-			float s = (end - GetPosition()).y * 4.f;
+			float s = (end - GetPosition()).y * 3.f;
 			vector3 v = ball->GetVelocity();
 			v.y = glm::max(v.y, s);
 			ball->SetVelocity(v);
