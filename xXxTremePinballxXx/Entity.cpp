@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "OctNode.h"
 
 std::vector<Entity*> Entity::instances;
 
@@ -66,27 +67,28 @@ void Entity::SetVelocity(const vector3& newVelocity)
 	this->velocity = newVelocity;
 }
 
-void Entity::PhysicsUpdate(double deltaTime)
+void Entity::PhysicsUpdate(Octree* octree, double deltaTime)
 {
-	for (std::vector<GameObject*>::iterator it = GameObject::instances.begin(); it != GameObject::instances.end(); ++it)
+	auto& instancesToCheck = octree->nearbyObjects(this);
+	for (auto obj : instancesToCheck)
 	{
-		if (*it == this || frameCollisions.find((*it)->GetID()) != frameCollisions.end())
+		if (obj == this || frameCollisions.find(this->GetID()) != frameCollisions.end())
 			continue;
 
 		checkCount++;
-		std::shared_ptr<Collision> collision = (*it)->GetCollider()->IsColliding(this->collider);
+		std::shared_ptr<Collision> collision = obj->GetCollider()->IsColliding(this->collider);
 
 		if (collision != nullptr) {
-			collision->collider1 = *it;
+			collision->collider1 = obj;
 			collision->collider2 = this;
 		}
 
-		AddFrameCollision((*it)->GetID(), collision);
-		(*it)->AddFrameCollision(GetID(), collision);
+		AddFrameCollision(obj->GetID(), collision);
+		obj->AddFrameCollision(GetID(), collision);
 
 		if (collision != nullptr && collision->colliding) {
 			OnCollision(collision->GetEvent(this));
-			(*it)->OnCollision(collision->GetEvent(*it));
+			obj->OnCollision(collision->GetEvent(obj));
 		}
 	}
 
@@ -100,6 +102,5 @@ void Entity::PhysicsUpdate(double deltaTime)
 
 void Entity::Update(double deltaTime)
 {
-	PhysicsUpdate(deltaTime);
 	GameObject::Update(deltaTime);
 }

@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "Flipper.h"
+#include "OctNode.h"
 
 vector3 Ball::Gravity = vector3(0.0f, -6.0f, 0.0f);
 
@@ -15,9 +16,9 @@ Ball::~Ball()
 {
 }
 
-void Ball::PhysicsUpdate(double deltaTime)
+void Ball::PhysicsUpdate(Octree* octree, double deltaTime)
 {
-	Entity::PhysicsUpdate(deltaTime);
+	Entity::PhysicsUpdate(octree, deltaTime);
 	angularVelocity.z = -velocity.x * 2.f;
 	GameObject::Rotate(quaternion(angularVelocity * static_cast<float>(deltaTime)));
 }

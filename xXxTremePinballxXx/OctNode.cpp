@@ -53,7 +53,7 @@ OctNode * OctNode::GetParent()
 	return this->parent;
 }
 
-std::vector<GameObject*> OctNode::GetObjects()
+const std::vector<GameObject*>& OctNode::GetObjects() const
 {
 	return this->containedObjects;
 }
@@ -125,6 +125,9 @@ void RecurDrawTree(OctNode *start, vector3 min, vector3 max)
 
 void Octree::DrawOctree()
 {
+	if (!enabled)
+		return;
+
 	RecurDrawTree(this->head, minBoundary, maxBoundary);
 }
 
@@ -194,16 +197,40 @@ void Octree::GenerateTree()
 	*/
 }
 
+void childFinderTomToldMeToDoIt(std::vector<GameObject*>& results, OctNode* current)
+{
+	results.insert(results.end(), current->GetObjects().begin(), current->GetObjects().end());
+	if (!current->isLeaf())
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			childFinderTomToldMeToDoIt(results, current->GetLeaf(i));
+		}
+	}
+}
+
 std::vector<GameObject*> Octree::nearbyObjects(GameObject* object)
 {
+	if (!enabled)
+		return GameObject::GetInstances();
+
 	std::vector<GameObject*> toReturn = std::vector<GameObject*>();
 	OctNode* start = object->GetOctNode();
-	toReturn.insert(toReturn.end(), start->GetObjects().begin(), start->GetObjects().end());
-	while (start->GetParent() != nullptr)
+	do
 	{
 		toReturn.insert(toReturn.end(), start->GetObjects().begin(), start->GetObjects().end());
 		start = start->GetParent();
+	} while (start);
+
+	start = object->GetOctNode();
+	if (!start->isLeaf())
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			childFinderTomToldMeToDoIt(toReturn, start->GetLeaf(i));
+		}
 	}
-	return std::vector<GameObject*>();
+
+	return toReturn;
 }
 

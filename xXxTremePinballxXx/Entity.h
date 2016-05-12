@@ -28,7 +28,7 @@ public:
 
 	void SetVelocity(const vector3& newVelocity);
 
-	virtual void PhysicsUpdate(double deltaTime);
+	virtual void PhysicsUpdate(class Octree* octree, double deltaTime);
 
 	virtual void Update(double deltaTime) override;
 

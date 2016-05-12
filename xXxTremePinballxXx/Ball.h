@@ -8,7 +8,7 @@ class Ball :
 public:
 	Ball();
 	~Ball();
-	virtual void PhysicsUpdate(double) override;
+	virtual void PhysicsUpdate(class Octree*, double) override;
 	virtual void Update(double) override;
 	void Accelerate(vector3);
 	virtual void OnCollision(const CollisionEvent&) override;

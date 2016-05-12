@@ -62,14 +62,12 @@ ObjectType Flipper::GetType()
 
 void Flipper::OnCollision(const CollisionEvent& collision)
 {
-	switch (collision.collidee->GetType())
-	{
-	case ObjectType::Ball:
+	if (collision.collidee->GetType() == ObjectType::Ball)
 	{
 		Entity* ball = reinterpret_cast<Entity*>(collision.collidee);
 		vector3 disp = ball->GetPosition() - collision.collideeIntersectPt;
 		vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
-		
+
 		double flipperMagnitude = 0.0;
 		if (flipping)
 		{
@@ -78,15 +76,10 @@ void Flipper::OnCollision(const CollisionEvent& collision)
 			float relEdge = (edgePos + transform->GetOrigin().x);
 			flipperMagnitude = relEdge / length;
 			//flipperMagnitude = ((flipRotation.z - flipStart.z) * flipSpeed) * (glm::distance(collision.intersectPt, (GetPosition() + GetOrigin()))) / 3.f;
-		}		
+		}
 		double velocityImpulse = flipperMagnitude * flipSpeed * 1.75f;
 		vector3 newBallVelocity = ball->GetVelocity() + ((float)velocityImpulse * normal);
 
 		ball->SetVelocity(newBallVelocity);
-
-		break;
-	}
-	default:
-		break;
 	}
 }

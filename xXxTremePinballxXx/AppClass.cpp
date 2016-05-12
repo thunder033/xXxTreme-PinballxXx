@@ -86,7 +86,7 @@ void App::Update(void)
 			timeSinceLastPhysicsUpdate -= physicsTickTime;
 			for (auto* ent : Entity::GetInstances())
 			{
-				ent->PhysicsUpdate(physicsTickTime);
+				ent->PhysicsUpdate(octree, physicsTickTime);
 			}
 		}
 
