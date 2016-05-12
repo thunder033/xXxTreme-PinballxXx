@@ -1,7 +1,3 @@
-/*----------------------------------------------
-Programmer: Alberto Bobadilla (labigm@gmail.com)
-Date: 2015/09 (Last Modified on: 15/11)
-----------------------------------------------*/
 #ifndef __APPLICATION_H_
 #define __APPLICATION_H_
 
@@ -12,6 +8,7 @@ Date: 2015/09 (Last Modified on: 15/11)
 #include "Ball.h"
 #include "OctNode.h"
 #include "Flipper.h"
+#include "Plunger.h"
 #include <SFML\Graphics.hpp>
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
@@ -24,7 +21,9 @@ private:
 	Ball* obj2;
 	Flipper* flipper;
 	Flipper* flipperR;
+
 	Octree* octree;
+	Plunger* plunger;
 
 	double timeSinceLastPhysicsUpdate;
 	double physicsTickTime;

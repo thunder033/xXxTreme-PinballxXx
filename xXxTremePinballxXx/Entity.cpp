@@ -15,7 +15,7 @@ void Entity::SetMass(float mass)
 	this->mass = mass;
 }
 
-void Entity::SetElascity(float elascity)
+void Entity::SetElasticity(float elascity)
 {
 	this->elasictiy = elascity;
 }
@@ -51,7 +51,7 @@ const float Entity::GetMass() const
 	return mass;
 }
 
-const float Entity::GetElascity() const
+const float Entity::GetElasticity() const
 {
 	return elasictiy;
 }
@@ -74,7 +74,7 @@ void Entity::PhysicsUpdate(double deltaTime)
 			continue;
 
 		checkCount++;
-		Collision* collision = (*it)->GetCollider()->IsColliding(this->collider);
+		std::shared_ptr<Collision> collision = (*it)->GetCollider()->IsColliding(this->collider);
 
 		if (collision != nullptr) {
 			collision->collider1 = *it;

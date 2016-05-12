@@ -79,12 +79,12 @@ vector3 GameObject::GetOrigin() const
 	return transform->GetOrigin();
 }
 
-const vector3& GameObject::GetPosition() const
+const vector3 GameObject::GetPosition() const
 {
 	return transform->GetPosition();
 }
 
-const quaternion& GameObject::GetRotation() const
+const quaternion GameObject::GetRotation() const
 {
 	return transform->GetRotation();
 }
@@ -134,7 +134,7 @@ void GameObject::Scale(vector3 scale)
 	collider->calculateAABB();
 }
 
-void GameObject::AddFrameCollision(int objID, Collision * collision)
+void GameObject::AddFrameCollision(int objID, std::shared_ptr<Collision> collision)
 {
 	hasFrameCollisions = hasFrameCollisions || (collision != nullptr && collision->colliding);
 	frameCollisions.insert({ { objID, collision } });
@@ -146,7 +146,7 @@ void GameObject::Update(double deltaTime)
 	collider->UpdateOBB();
 }
 
-void GameObject::OnCollision(const CollisionEvent collision)
+void GameObject::OnCollision(const CollisionEvent& collision)
 {
 	renderer->AddSphereToQueue(glm::translate(collision.collidee->GetPosition() + collision.collideeIntersectPt) * glm::scale(vector3(.1f)), REYELLOW, SOLID);
 }

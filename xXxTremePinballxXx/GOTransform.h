@@ -10,11 +10,16 @@ class GOTransform
 
 	void calculateMatrix();
 
+	GOTransform* parent;
+	std::vector<GOTransform*> children;
+
 public:
 	GOTransform();
 	~GOTransform();
 
-	const matrix4& GetMatrix() const;
+	const matrix4 GetMatrix() const;
+
+	const matrix4& GetLocalMatrix() const;
 
 	/*
 	Sets the origin of the game object, which indicates how
@@ -24,26 +29,42 @@ public:
 
 	vector3 GetOrigin() const;
 
-	const vector3& GetPosition() const;
+	const vector3 GetPosition() const;
 
-	const vector3& GetScale() const;
+	const vector3 GetScale() const;
 
-	const quaternion& GetRotation() const;
+	const quaternion GetRotation() const;
 
-	void SetPosition(vector3);
+	const vector3& GetLocalPosition() const;
 
-	void SetScale(vector3);
+	const vector3& GetLocalScale() const;
 
-	void Translate(vector3);
+	const quaternion& GetLocalRotation() const;
 
-	void Scale(float);
+	void SetPosition(vector3 position);
 
-	void Scale(vector3);
+	void SetScale(vector3 scale);
 
-	void Rotate(quaternion);
+	void Translate(vector3 offset);
 
-	void RotateTo(vector3);
+	void Scale(float scale);
 
-	void RotateTo(quaternion);
+	void Scale(vector3 scale);
+
+	void Rotate(quaternion rotation);
+
+	void RotateTo(vector3 orientation);
+
+	void RotateTo(quaternion orientation);
+
+	void RemoveChild(GOTransform* child);
+
+	const GOTransform* GetParent() const;
+
+	void AddChild(GOTransform* child);
+
+	void SetParent(GOTransform* parent);
+
+	void RemoveParent();
 };
 

@@ -12,7 +12,7 @@ protected:
 	vector3 acceleration;
 
 	void SetMass(float mass);
-	void SetElascity(float elascity);
+	void SetElasticity(float elascity);
 
 	static std::vector<Entity*> instances;
 public:
@@ -24,7 +24,7 @@ public:
 
 	const float GetMass() const;
 
-	const float GetElascity() const;
+	const float GetElasticity() const;
 
 	void SetVelocity(const vector3& newVelocity);
 

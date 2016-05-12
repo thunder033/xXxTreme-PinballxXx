@@ -200,7 +200,7 @@ vector3 Collider::GetMax() {
 }
 
 //--- Non Standard Singleton Methods
-Collision* Collider::IsColliding(Collider* const a_pOther)
+std::shared_ptr<Collision> Collider::IsColliding(Collider* const a_pOther)
 {
 	float dist = glm::distance(GetCenter(), a_pOther->GetCenter());
 	if (dist > (GetRadius() + a_pOther->GetRadius())) {
@@ -239,7 +239,7 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 		bool colliding = glm::dot(toSphereCenter, toSphereCenter) <= sphere->GetRadius() * sphere->GetRadius();
 
 		if (colliding) {
-			Collision* collision = new Collision();
+			std::shared_ptr<Collision> collision(new Collision());
 			collision->colliding = true;
 
 			vector3 penetration = vector3(0);
@@ -263,7 +263,7 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 	}
 	//If they are both circles, we have already checked their radii
 	else if (type == ColliderType::Sphere) {
-		Collision* collision = new Collision();
+		std::shared_ptr<Collision> collision(new Collision());
 		collision->colliding = true;
 		return collision;
 	}
@@ -312,7 +312,7 @@ Collision* Collider::IsColliding(Collider* const a_pOther)
 			}
 		}
 
-		Collision* collision = new Collision();
+		std::shared_ptr<Collision> collision(new Collision());
 		//TODO: SAT penetration vector
 		collision->colliding = true;
 		return collision;

@@ -24,20 +24,15 @@ Flipper::Flipper(boolean flipped) : Entity((mesh = new PrimitiveClass(), mesh->G
 	flipping = false;
 }
 
-
-Flipper::~Flipper()
-{
-}
-
 void Flipper::Update(double deltaTime)
 {
 	if (flipping) {
-		flipPct += flipSpeed * deltaTime;
+		flipPct += (float) (flipSpeed * deltaTime);
 		if (flipPct >= 1.0f)
 			flipPct = 1.0f;
 	}
 	else if(flipPct > 0) {
-		flipPct -= flipSpeed * deltaTime;
+		flipPct -= (float) (flipSpeed * deltaTime);
 		if (flipPct < 0)
 			flipPct = 0;
 	}
@@ -65,13 +60,13 @@ ObjectType Flipper::GetType()
 	return ObjectType::Flipper;
 }
 
-void Flipper::OnCollision(CollisionEvent collision)
+void Flipper::OnCollision(const CollisionEvent& collision)
 {
 	switch (collision.collidee->GetType())
 	{
 	case ObjectType::Ball:
 	{
-		Entity* ball = dynamic_cast<Entity*>(collision.collidee);
+		Entity* ball = reinterpret_cast<Entity*>(collision.collidee);
 		vector3 disp = ball->GetPosition() - collision.collideeIntersectPt;
 		vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
 		

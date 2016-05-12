@@ -9,7 +9,8 @@ void App::ProcessKeyboard(void)
 #pragma region ON_KEY_PRESS_RELEASE
 	static bool	bLastF1 = false, bLastF2 = false, bLastF3 = false, bLastF4 = false, bLastF5 = false,
 				bLastF6 = false, bLastF7 = false, bLastF8 = false, bLastF9 = false, bLastF10 = false,
-				bLastEscape = false, bLastF = false, bLastSpace = false, bLastZ = false, bLastX = false;
+				bLastEscape = false, bLastF = false, bLastSpace = false, bLastZ = false, bLastX = false,
+				bLastC = false;
 #define ON_KEY_PRESS_RELEASE(key, pressed_action, released_action){  \
 			bool pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::key);			\
 			if(pressed){											\
@@ -71,6 +72,7 @@ void App::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F9, GameObject::ToggleDebugMode(CT_AABB), NULL);
 	ON_KEY_PRESS_RELEASE(F10, GameObject::ToggleDebugMode(CT_NAB), NULL);
 	ON_KEY_PRESS_RELEASE(Z, flipper->Flip(), flipper->Unflip());
+	ON_KEY_PRESS_RELEASE(C, plunger->StartLaunch(), plunger->EndLaunch());
 	//ON_KEY_PRESS_RELEASE(X, flipperR->Flip(), flipperR->Unflip());
 	static bool bFPSControll = false;
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));

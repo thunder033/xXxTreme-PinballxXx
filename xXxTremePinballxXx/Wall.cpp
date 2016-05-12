@@ -6,11 +6,6 @@ Wall::Wall(vector3 scale) : GameObject((mesh = new PrimitiveClass(), mesh->Gener
 	Scale(scale);
 }
 
-void Wall::OnCollision(CollisionEvent collision)
+void Wall::OnCollision(const CollisionEvent& collision)
 {
-	switch (collision.collidee->GetType())
-	{
-	default:
-		break;
-	}
 }

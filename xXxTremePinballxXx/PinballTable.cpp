@@ -48,11 +48,11 @@ PinballTable::PinballTable()
 	Walls.push_back(WallInst);
 
 	// Top right angled wall
-	Position = vector3(3.f, 5.f, 0.75f);
+	Position = vector3(3.f, 5.1f, 0.75f);
 	Scale = vector3(0.25f, 2.75f, 0.5f);
 	WallInst = new Wall(Scale);
 	WallInst->Translate(Position);
-	WallInst->RotateTo(glm::radians(vector3(0.f, 0.f, 45.f)));
+	WallInst->RotateTo(glm::radians(vector3(0.f, 0.f, 60.f)));
 	Walls.push_back(WallInst);
 
 	// Top left angled wall
