@@ -15,6 +15,7 @@ GameObject::GameObject() : GameObject(new PrimitiveClass())
 GameObject::GameObject(MeshClass * mesh) : id(curID++)
 {
 	this->mesh = mesh;
+	collisionTest = ObjectType::Default;
 	transform = new GOTransform();
 
 	hasFrameCollisions = false;

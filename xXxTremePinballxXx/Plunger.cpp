@@ -10,6 +10,7 @@ Plunger::Plunger(const vector3& start, const vector3 end)
 	Scale(vector3(1.f, 0.3f, 0.4f));
 	launchPct = 0.f;
 	speed = 5.f;
+	collisionTest = ObjectType::Ball;
 }
 
 void Plunger::Update(double dt)

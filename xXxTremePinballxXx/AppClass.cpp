@@ -39,8 +39,8 @@ void App::InitVariables(void)
 
 	flipper = new Flipper(false);
 	flipper->Translate(vector3(-2.5f, -4.5f, 0.75f));
-	//flipperR = new Flipper(true);
-	//flipperR->Translate(vector3(1.f, -4.5f, 0.75f));
+	flipperR = new Flipper(true);
+	flipperR->Translate(vector3(1.f, -4.5f, 0.75f));
 
 	plunger = new Plunger(vector3(3.5f, -5.4f, 0.75f), vector3(3.5f, 0.f, 0.75f));
 

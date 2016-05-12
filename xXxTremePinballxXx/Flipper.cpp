@@ -22,6 +22,7 @@ Flipper::Flipper(boolean flipped) : Entity((mesh = new PrimitiveClass(), mesh->G
 	flipPct = 0;
 	flipSpeed = 7.5f;
 	flipping = false;
+	collisionTest = ObjectType::Ball;
 }
 
 void Flipper::Update(double deltaTime)

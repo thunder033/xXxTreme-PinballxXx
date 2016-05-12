@@ -70,6 +70,9 @@ void Entity::PhysicsUpdate(double deltaTime)
 {
 	for (std::vector<GameObject*>::iterator it = GameObject::instances.begin(); it != GameObject::instances.end(); ++it)
 	{
+		if (this->collisionTest != ObjectType::Default && this->collisionTest != (*it)->GetType())
+			continue;
+
 		if (*it == this || frameCollisions.find((*it)->GetID()) != frameCollisions.end())
 			continue;
 

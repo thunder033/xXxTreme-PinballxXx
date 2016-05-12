@@ -13,6 +13,7 @@ public:
 	Wall(vector3);
 
 	virtual void OnCollision(const CollisionEvent&) override;
+	ObjectType GetType();
 };
 
 
