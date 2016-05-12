@@ -13,7 +13,8 @@ enum class ObjectType
 {
 	Default,
 	Flipper,
-	Ball
+	Ball,
+	Wall,
 };
 
 //class Entity;
@@ -34,8 +35,7 @@ protected:
 	Collider* collider;
 	void Scale(vector3);
 	GOTransform* transform;
-	vector3 velocity;
-	vector3 acceleration;
+	ObjectType collisionTest;
 	bool hasFrameCollisions;
 	std::unordered_map<int, std::shared_ptr<Collision>> frameCollisions;
 

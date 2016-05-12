@@ -73,8 +73,8 @@ void App::ProcessKeyboard(void)
 	ON_KEY_PRESS_RELEASE(F10, GameObject::ToggleDebugMode(CT_NAB), NULL);
 	ON_KEY_PRESS_RELEASE(Z, flipper->Flip(), flipper->Unflip());
 	ON_KEY_PRESS_RELEASE(C, plunger->StartLaunch(), plunger->EndLaunch());
+	ON_KEY_PRESS_RELEASE(X, flipperR->Flip(), flipperR->Unflip());
 	ON_KEY_PRESS_RELEASE(O, octree->enabled = !octree->enabled, NULL);
-	//ON_KEY_PRESS_RELEASE(X, flipperR->Flip(), flipperR->Unflip());
 	static bool bFPSControll = false;
 	ON_KEY_PRESS_RELEASE(F, bFPSControll = !bFPSControll, m_pCameraMngr->SetFPS(bFPSControll));
 #pragma endregion

@@ -75,6 +75,9 @@ void Entity::PhysicsUpdate(Octree* octree, double deltaTime)
 		if (obj == this || frameCollisions.find(this->GetID()) != frameCollisions.end())
 			continue;
 
+		if (this->collisionTest != ObjectType::Default && this->collisionTest != obj->GetType())
+			continue;
+
 		checkCount++;
 		std::shared_ptr<Collision> collision = obj->GetCollider()->IsColliding(this->collider);
 
