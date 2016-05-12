@@ -28,6 +28,8 @@ private:
 	double timeSinceLastPhysicsUpdate;
 	double physicsTickTime;
 
+	int checks;
+
 public:
 	typedef ReEngAppClass super;
 

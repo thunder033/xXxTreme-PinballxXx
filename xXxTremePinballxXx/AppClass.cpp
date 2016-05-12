@@ -96,6 +96,8 @@ void App::Update(void)
 		}
 	}
 
+	checks = (checks + GameObject::GetCheckCount()) / 2;
+
 	GameObject::UpdateAll(deltaTime);
 	
 	//Adds all loaded instance to the render list
@@ -115,7 +117,7 @@ void App::Update(void)
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
 
 	m_pMeshMngr->Print("Number of Checks: ");
-	m_pMeshMngr->PrintLine(std::to_string(GameObject::GetCheckCount()), REGREEN);
+	m_pMeshMngr->PrintLine(std::to_string(checks), REGREEN);
 }
 
 void App::Display(void)

@@ -21,13 +21,13 @@ void Ball::PhysicsUpdate(Octree* octree, double deltaTime)
 	Entity::PhysicsUpdate(octree, deltaTime);
 	angularVelocity.z = -velocity.x * 2.f;
 	GameObject::Rotate(quaternion(angularVelocity * static_cast<float>(deltaTime)));
+	transform->SetPosition(vector3(transform->GetPosition().x, transform->GetPosition().y, 1.0f));
 }
 
 void Ball::Update(double DeltaTime)
 {
 	Accelerate(Gravity);
 	Entity::Update(DeltaTime);
-	transform->SetPosition(vector3(transform->GetPosition().x, transform->GetPosition().y, 1.0f));
 }
 	
 
@@ -49,6 +49,7 @@ void Ball::OnCollision(const CollisionEvent& e)
 
 	//Get the vector from the center of the ball to it's edge
 	vector3 disp = -(collision.collideeIntersectPt - GetPosition()) - collision.penetrationVector;
+	disp.z = 0;
 	//Get the normal of collision (perpendicular to collision surface)
 	vector3 normal = glm::normalize(glm::length(disp) == 0 ? vector3(1) : disp);
 	//get the slope of collision (parallel to collision surface or tangent if it's circular)
