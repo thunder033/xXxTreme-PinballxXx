@@ -49,6 +49,16 @@ GameObject::~GameObject()
 	}
 }
 
+OctNode * GameObject::GetOctNode()
+{
+	return this->parent;
+}
+
+void GameObject::SetOctNode(OctNode* parent)
+{
+	this->parent = parent;
+}
+
 ObjectType GameObject::GetType()
 {
 	return ObjectType::Default;

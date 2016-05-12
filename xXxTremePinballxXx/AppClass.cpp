@@ -26,6 +26,8 @@ void App::InitVariables(void)
 
 	Table = new PinballTable();
 
+	octree = new Octree(vector3(-5.f, -7.f, -10.f), vector3(5.f, 7.f, 2.f), 1);
+
 	//GameObject* obj = new GameObject();
 	//obj->Rotate(quaternion(vector3(45, 45, 45)));
 
@@ -33,7 +35,7 @@ void App::InitVariables(void)
 	cone->GenerateCone(1, 1.5f, 10, REBLUE);
 
 	obj2 = new Ball();
-	obj2->Translate(vector3(3.25f, 0, 0));
+	obj2->Translate(vector3(3.25f, -2.f, 0));
 	//obj2->Rotate(quaternion(vector3(0, 45, 0)));
 	//obj2->SetOrigin(vector3(0, 0.5f, 0));
 
@@ -44,16 +46,20 @@ void App::InitVariables(void)
 
 	physicsTickTime = 1.0 / 95.0; // We don't do integration, so we have to set the physics tick rate to be _really_ high
 	timeSinceLastPhysicsUpdate = 0.0;
+
+	octree->GenerateTree();
 }
 
 void App::Update(void)
 {
+
 	//Update the system's time
 	m_pSystem->UpdateTime();
 
 	//Update the mesh manager's time without updating for collision detection
 	m_pMeshMngr->Update();
 
+	octree->GenerateTree();
 	//First person camera movement
 	if (m_bFPC == true)
 		CameraRotation();
@@ -131,6 +137,8 @@ void App::Display(void)
 		m_pMeshMngr->AddGridToQueue(1.0f, REAXIS::XY, REBLUE * 0.75f); //renders the XY grid with a 100% scale
 		break;
 	}
+
+	octree->DrawOctree();
 
 	matrix4 projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 view = m_pCameraMngr->GetViewMatrix();

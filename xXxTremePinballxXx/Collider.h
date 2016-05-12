@@ -96,6 +96,8 @@ public:
 	vector3 GetLastCollision();
 	OBB UpdateOBB();
 	const OBB GetOBB();
+	vector3 GetAABBMin();
+	vector3 GetAABBMax();
 
 	/*
 	IsColliding

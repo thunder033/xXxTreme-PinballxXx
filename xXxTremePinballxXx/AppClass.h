@@ -10,6 +10,7 @@ Date: 2015/09 (Last Modified on: 15/11)
 #include "PinballTable.h"
 #include "GameObject.h"
 #include "Ball.h"
+#include "OctNode.h"
 #include "Flipper.h"
 #include <SFML\Graphics.hpp>
 
@@ -23,6 +24,7 @@ private:
 	Ball* obj2;
 	Flipper* flipper;
 	Flipper* flipperR;
+	Octree* octree;
 
 	double timeSinceLastPhysicsUpdate;
 	double physicsTickTime;

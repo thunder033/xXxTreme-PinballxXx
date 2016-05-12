@@ -1,21 +1,26 @@
 #pragma once
-#include "AppClass.h"
+#include "RE\ReEngAppClass.h"
+#include "GameObject.h"
 
 class Octree;
 
 class OctNode
 {
 public:
-	OctNode(Octree* octree);
+	OctNode(Octree* octree, OctNode* parent);
 	~OctNode();
 	void GenerateLeaves();
 	bool isLeaf();
+	bool hasObjects();
 	OctNode* GetLeaf(int whichLeaf);
-	void AddObjects(GameObject**);
+	void AddObjects(const std::vector<GameObject*> &objects);
+	OctNode* GetParent();
+	std::vector<GameObject*> GetObjects();
 private:
 	Octree* octTree;
-	GameObject** containedObjects;
+	std::vector<GameObject*> containedObjects;
 	OctNode** leaves;
+	OctNode* parent;
 };
 
 class Octree
@@ -25,10 +30,12 @@ public:
 	~Octree();
 	void DrawOctree();
 	int GetMaxObjects();
+	void GenerateTree();
+	std::vector<GameObject*> nearbyObjects(GameObject*);
 private:
 	OctNode* head;
 	vector3 minBoundary;
 	vector3 maxBoundary;
-	int maxObjects;
+	uint maxObjects;
 };
 

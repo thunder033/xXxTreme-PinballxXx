@@ -66,7 +66,9 @@ void Ball::OnCollision(CollisionEvent collision)
 		//calculate the reflected ball velocity
 		vector3 newBallVelocity = glm::reflect(GetVelocity(), -normal);
 		//get the normalized
-		vector3 velocityNormal = glm::normalize(newBallVelocity);
+		vector3 velocityNormal;
+		if (glm::length(newBallVelocity) == 0) velocityNormal = vector3(0.f, 0.f, 0.f);
+		else velocityNormal = glm::normalize(newBallVelocity);
 		//apply the ball's elascity to only the velocity component normal to the surface
 		vector3 normalVelocity = velocityNormal * glm::dot(newBallVelocity, normal) * GetElascity();
 		//apply friction to the ball's roll in the component parallel to the surface
