@@ -9,3 +9,8 @@ Wall::Wall(vector3 scale) : GameObject((mesh = new PrimitiveClass(), mesh->Gener
 void Wall::OnCollision(const CollisionEvent& collision)
 {
 }
+
+ObjectType Wall::GetType()
+{
+	return ObjectType::Wall;
+}
